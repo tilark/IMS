@@ -82,7 +82,6 @@ namespace IMS.Models
         /// </summary>
         /// <value>The monitor item identifier.</value>
         public Guid IndicatorID { get; set; }
-
         /// <summary>
         /// Gets or sets the Indicator value.
         /// </summary>
@@ -160,6 +159,9 @@ namespace IMS.Models
         public Guid IndicatorID { get; set; }
         [Display(Name = "项目名称")]
         public string Name { get; set; }
+        [Display(Name = "单位")]
+        public string Unit { get; set; }
+
         [Display(Name = "项目备注")]
         public string Remarks { get; set; }
         public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValue { get; set; }
@@ -221,6 +223,7 @@ namespace IMS.Models
         public Guid IndicatorID { get; set; }
         public virtual Department Department { get; set; }
         public virtual Indicator Indicator { get; set; }
+
         [Display(Name = "比较方式")]
         [MaxLength(30)]
         public string CompareMethod { get; set; }

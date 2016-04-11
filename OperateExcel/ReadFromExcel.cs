@@ -28,7 +28,7 @@ namespace OperateExcel
                     rowCount = sheetData.Elements<Row>().Count();
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception ex)
             {
 
             }
@@ -65,7 +65,7 @@ namespace OperateExcel
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception ex)
             {
 
                 //如果文件不存在，会引发该异常，不处理，直接返回NULL值
@@ -99,9 +99,8 @@ namespace OperateExcel
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception ex)
             {
-                ListData.Add(ex.Message);
                 //如果文件不存在，会引发该异常，不处理，直接返回NULL值
             }
             return ListData;
@@ -148,10 +147,9 @@ namespace OperateExcel
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception ex)
             {
                 //如果文件不存在，会引发该异常，不处理，直接返回NULL值
-                ListData.Add(ex.Message);
 
             }
             return ListData;

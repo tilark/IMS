@@ -385,9 +385,9 @@
     <Compile Include="Admin\Indicator.aspx.designer.cs">
       <DependentUpon>Indicator.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ApplicationDbContextMigrations\201604091206045_CreateUserDataBase.cs" />
-    <Compile Include="ApplicationDbContextMigrations\201604091206045_CreateUserDataBase.Designer.cs">
-      <DependentUpon>201604091206045_CreateUserDataBase.cs</DependentUpon>
+    <Compile Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.cs" />
+    <Compile Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.Designer.cs">
+      <DependentUpon>201604111211096_CreateUserDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="ApplicationDbContextMigrations\Configuration.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -425,6 +425,14 @@
     <Compile Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.cs" />
     <Compile Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.Designer.cs">
       <DependentUpon>201604110227307_DeleteIDinDepartmentCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604111218160_AddIndicatorUnit.cs" />
+    <Compile Include="ImsDbContextMigrations\201604111218160_AddIndicatorUnit.Designer.cs">
+      <DependentUpon>201604111218160_AddIndicatorUnit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604111241110_UpdateUnitPosition.cs" />
+    <Compile Include="ImsDbContextMigrations\201604111241110_UpdateUnitPosition.Designer.cs">
+      <DependentUpon>201604111241110_UpdateUnitPosition.cs</DependentUpon>
     </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Logic\GetBaseData.cs" />
@@ -467,14 +475,20 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ApplicationDbContextMigrations\201604091206045_CreateUserDataBase.resx">
-      <DependentUpon>201604091206045_CreateUserDataBase.cs</DependentUpon>
+    <EmbeddedResource Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.resx">
+      <DependentUpon>201604111211096_CreateUserDatabase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604110220498_InitialDataBase.resx">
       <DependentUpon>201604110220498_InitialDataBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.resx">
       <DependentUpon>201604110227307_DeleteIDinDepartmentCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604111218160_AddIndicatorUnit.resx">
+      <DependentUpon>201604111218160_AddIndicatorUnit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604111241110_UpdateUnitPosition.resx">
+      <DependentUpon>201604111241110_UpdateUnitPosition.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

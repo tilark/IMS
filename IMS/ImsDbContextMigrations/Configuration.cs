@@ -1,19 +1,19 @@
-namespace IMS.MonitorDbContextMigrations
+namespace IMS.ImsDbContextMigrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<IMS.Models.MonitorDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<IMS.Models.ImsDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            MigrationsDirectory = @"MonitorDbContextMigrations";
+            MigrationsDirectory = @"ImsDbContextMigrations";
         }
 
-        protected override void Seed(IMS.Models.MonitorDbContext context)
+        protected override void Seed(IMS.Models.ImsDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

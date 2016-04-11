@@ -141,7 +141,7 @@ namespace IMS.Admin
                 }
                 //检查在DepartmentMonitors中是否存在该信息
 
-                var queryDepartmentMonitor = context.DepartmentMonitors.Where(d => d.IndicatorID == IndicatorID).FirstOrDefault();
+                var queryDepartmentMonitor = context.DepartmentIndicatorValues.Where(d => d.IndicatorID == IndicatorID).FirstOrDefault();
                 if (queryDepartmentMonitor != null)
                 {
                     //DepartmentMonitors 中存在该信息，不能删除

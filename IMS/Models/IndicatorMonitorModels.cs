@@ -23,11 +23,8 @@ using System.ComponentModel.DataAnnotations;
 namespace IMS.Models
 {
     /// <summary>
-    /// IndicatorContext.
-    /// Department  Indicator  DepartmentCategory 
-    //    DepartmentIndicatorValue
-    //    DepartmentCategoryIndicatorMap
-    //DepartmentIndicatorStandardValue
+    /// ImsDbContext.
+
     /// </summary>
     public class ImsDbContext : DbContext
     {
@@ -56,7 +53,7 @@ namespace IMS.Models
 
     }
     /// <summary>
-    /// DepartmentIndicatorValue.
+    /// DepartmentIndicatorValue.科室项目的多对多的值表
     /// </summary>
     public class DepartmentIndicatorValue
     {
@@ -86,7 +83,6 @@ namespace IMS.Models
         /// <value>The monitor item identifier.</value>
         public Guid IndicatorID { get; set; }
 
-        public Guid DepartmentCategoryID { get; set; }
         /// <summary>
         /// Gets or sets the Indicator value.
         /// </summary>
@@ -112,13 +108,12 @@ namespace IMS.Models
         /// </summary>
         /// <value>The monitor item.</value>
         public virtual Indicator Indicator { get; set; }
-        public virtual DepartmentCategory DepartmentCategory { get; set; }
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
 
     }
     /// <summary>
-    /// Class Department.
+    /// Department.科室基础表
     /// </summary>
     public class Department
     {
@@ -130,6 +125,7 @@ namespace IMS.Models
         [Display(Name = "科室编号")]
         [ScaffoldColumn(false)]
         public Guid DepartmentID { get; set; }
+        public Guid DepartmentCategoryID { get; set; }
         /// <summary>
         /// Gets or sets the name of the department.
         /// </summary>
@@ -146,46 +142,36 @@ namespace IMS.Models
         /// Gets or sets the department monitor.
         /// </summary>
         /// <value>The department monitor.</value>
-        public ICollection<DepartmentIndicatorValue> DepartmentIndicatorValue { get; set; }
+        public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValue { get; set; }
+        public virtual ICollection<DepartmentIndicatorStandardValue> DepartmentIndicatorStandardValue { get; set; }
+        public virtual DepartmentCategory DepartmentCategory { get; set; }
+
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
     }
     /// <summary>
-    /// Class Indicator.
+    /// Indicator.项目基础表
     /// </summary>
     public class Indicator
     {
-        /// <summary>
-        /// Gets or sets the monitor item identifier.
-        /// </summary>
-        /// <value>The monitor item identifier.</value>
         [Key]
         [Display(Name = "项目编号")]
         [ScaffoldColumn(false)]
         public Guid IndicatorID { get; set; }
-        /// <summary>
-        /// Gets or sets the name of the monitor.
-        /// </summary>
-        /// <value>The name of the monitor.</value>
         [Display(Name = "项目名称")]
         public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the remark.
-        /// </summary>
-        /// <value>The remark.</value>
+        [Display(Name = "项目备注")]
         public string Remarks { get; set; }
-        /// <summary>
-        /// Gets or sets the department monitor.
-        /// </summary>
-        /// <value>The department monitor.</value>
-        public ICollection<DepartmentIndicatorValue> DepartmentIndicatorValue { get; set; }
+        public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValue { get; set; }
+        public virtual ICollection<DepartmentIndicatorStandardValue> DepartmentIndicatorStandardValue { get; set; }
+        public virtual ICollection<DepartmentCategoryIndicatorMap> DepartmentCategoryIndicatorMap { get; set; }
+
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
 
     }
     /// <summary>
-    /// Gets or sets the Department Category.
+    /// Department Category.科室类别表
     /// </summary>
     /// <remarks>“非手术”、“手术”、“特殊科室”</remarks>
 
@@ -195,41 +181,47 @@ namespace IMS.Models
         [Display(Name = "类型编号")]
         [ScaffoldColumn(false)]
         public Guid DepartmentCategoryID { get; set; }
+
         [Display(Name = "类型名称")]
         [MaxLength(128)]
 
         public string Name { get; set; }
-        /// <summary>
-        /// Gets or sets the remark.
-        /// </summary>
-        /// <value>The remark.</value>
+        [Display(Name = "备注")]
+
         public string Remarks { get; set; }
-        public ICollection<DepartmentIndicatorValue> DepartmentIndicatorValue { get; set; }
+        public virtual ICollection<Department> Department { get; set; }
+        public virtual ICollection<DepartmentCategoryIndicatorMap> DepartmentCategoryIndicatorMap { get; set; }
+
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
     }
-
+    /// <summary>
+    /// DepartmentCategoryIndicatorMap.科室类别与项目映射表
+    /// </summary>
     public class DepartmentCategoryIndicatorMap
     {
         [Key]
         public Guid ID { get; set; }
         public Guid DepartmentCategoryID { get; set; }
         public Guid IndicatorID { get; set; }
-        public virtual ICollection<DepartmentCategory> DepartmentCategory { get; set; }
-        public virtual ICollection<Indicator> Indicator { get; set; }
+        public virtual DepartmentCategory DepartmentCategory { get; set; }
+        public virtual Indicator Indicator { get; set; }
 
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
     }
+    /// <summary>
+    /// DepartmentIndicatorStandardValue.科室项目的标准值表
+    /// </summary>
     public class DepartmentIndicatorStandardValue
     {
         [Key]
         public Guid ID { get; set; }
         public Guid DepartmentID { get; set; }
         public Guid IndicatorID { get; set; }
-        public virtual ICollection<Department> Department { get; set; }
-        public virtual ICollection<Indicator> Indicator { get; set; }
-        [Display(Name = "比较方法")]
+        public virtual Department Department { get; set; }
+        public virtual Indicator Indicator { get; set; }
+        [Display(Name = "比较方式")]
         [MaxLength(30)]
         public string CompareMethod { get; set; }
         [Display(Name = "标准值")]

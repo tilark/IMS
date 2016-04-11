@@ -102,7 +102,7 @@ namespace IMS.Admin
                         ModelState.AddModelError("", String.Format("项目 {0} 已存在！", name));
                         return;
                     }
-                    item.TypeName = name;
+                    item.Name = name;
                     item.Remarks = remark;
                     //database win
                     bool saveFailed;
@@ -140,11 +140,11 @@ namespace IMS.Admin
                 }
                 //检查在DepartmentMonitors中是否存在该信息
 
-                var queryDepartmentMonitor = context.DepartmentMonitors.Where(d => d.DepartmentCategoryID == DepartmentCategoryID).FirstOrDefault();
-                if (queryDepartmentMonitor != null)
+                var query = context.DepartmentCategoryIndicatorMaps.Where(d => d.DepartmentCategoryID == DepartmentCategoryID).FirstOrDefault();
+                if (query != null)
                 {
                     //DepartmentMonitors 中存在该信息，不能删除
-                    ModelState.AddModelError("", String.Format("在科室项目值表中存在 {0} 的项，禁止删除", item.Name));
+                    ModelState.AddModelError("", String.Format("在科室类别项目映射表中存在 {0} 的项，禁止删除", item.Name));
                     return;
                 }
                 TryUpdateModel(item);

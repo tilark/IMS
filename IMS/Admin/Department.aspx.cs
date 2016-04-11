@@ -104,7 +104,7 @@ namespace IMS.Admin
                         return;
                     }
                     item.DepartmentName = name;
-                    item.Remark = remark;
+                    item.Remarks = remark;
                     //database win
                     bool saveFailed;
                     do
@@ -141,7 +141,7 @@ namespace IMS.Admin
                 }
                 //检查在DepartmentMonitors中是否存在该信息
 
-                var queryDepartmentMonitor = context.DepartmentMonitors.Where(d => d.DepartmentID == DepartmentID).FirstOrDefault();
+                var queryDepartmentMonitor = context.DepartmentIndicatorStandardValues.Where(d => d.DepartmentID == DepartmentID).FirstOrDefault();
                 if (queryDepartmentMonitor != null)
                 {
                     //DepartmentMonitors 中存在该信息，不能删除

@@ -10,7 +10,68 @@ namespace OperateExcel
 {
     public class ReadFromExcel
     {
+        /// <summary>
+        /// 获取文件第一个工作表的行总数.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>System.UInt32.</returns>
+        public int GetRowCount(string fileName)
+        {
+            int rowCount = 0;
+            try
+            {
+                using (SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Open(fileName, false))
+                {
+                    WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart;
+                    WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                    SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+                    rowCount = sheetData.Elements<Row>().Count();
+                }
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
 
+            }
+            return rowCount;
+
+        }
+        /// <summary>
+        /// 根据指定的Row读取该行所有数据，并返回.
+        /// </summary>
+        /// <param name="rowIndex">Index of the row.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>List&lt;System.String&gt;.</returns>
+        public List<string> ReadRowFromExcel(uint rowIndex, string fileName)
+        {
+            List<string> ListData = new List<string>();
+            try
+            {
+                using (SpreadsheetDocument spreadsheetDoc = SpreadsheetDocument.Open(fileName, false))
+                {
+                    WorkbookPart workbookPart = spreadsheetDoc.WorkbookPart;
+                    WorksheetPart worksheetPart = workbookPart.WorksheetParts.First();
+                    SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+                    string text;
+                    Row row = sheetData.Elements<Row>().Where(r => r.RowIndex.Value == rowIndex).FirstOrDefault();
+                    if (row == null)
+                    {
+                        return ListData;
+                    }
+                    foreach (Cell cell in row.Elements<Cell>())
+                    {
+                        //根据DataType读取数据
+                        text = GetCellValue(workbookPart, cell);
+                        ListData.Add(text);
+                    }
+                }
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+
+                //如果文件不存在，会引发该异常，不处理，直接返回NULL值
+            }
+            return ListData;
+        }
         /// <summary>
         /// 按行读取第一个工作簿中的所有数据
         /// </summary>
@@ -40,6 +101,7 @@ namespace OperateExcel
             }
             catch (ArgumentOutOfRangeException ex)
             {
+                ListData.Add(ex.Message);
                 //如果文件不存在，会引发该异常，不处理，直接返回NULL值
             }
             return ListData;
@@ -64,13 +126,13 @@ namespace OperateExcel
                     SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
 
                     // Get the row number and column name for the first and last cells in the range.
-                    uint firstRowNum = GetRowIndex(firstCellName);
-                    uint lastRowNum = GetRowIndex(lastCellName);
+                    uint firstrowIndex = GetRowIndex(firstCellName);
+                    uint lastrowIndex = GetRowIndex(lastCellName);
                     string firstColumn = GetColumnName(firstCellName);
                     string lastColumn = GetColumnName(lastCellName);
                     string text = null;
                     //加.Skip<Row>(1)可过滤第一行标题。
-                    foreach (Row row in worksheetPart.Worksheet.Descendants<Row>().Where(r => r.RowIndex.Value >= firstRowNum && r.RowIndex.Value <= lastRowNum))
+                    foreach (Row row in worksheetPart.Worksheet.Descendants<Row>().Where(r => r.RowIndex.Value >= firstrowIndex && r.RowIndex.Value <= lastrowIndex))
                     {
                         foreach (Cell cell in row)
                         {
@@ -89,6 +151,8 @@ namespace OperateExcel
             catch (ArgumentOutOfRangeException ex)
             {
                 //如果文件不存在，会引发该异常，不处理，直接返回NULL值
+                ListData.Add(ex.Message);
+
             }
             return ListData;
 

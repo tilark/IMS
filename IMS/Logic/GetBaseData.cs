@@ -10,44 +10,44 @@ namespace IMS.Logic
 {
     public class GetBaseData
     {
-        public Dictionary< Int64,string> GetDepartmentDic()
+        public Dictionary<string,string> GetDepartmentDic()
         {
-            Dictionary<Int64, string> listData = new Dictionary<Int64, string>();
+            Dictionary<string, string> listData = new Dictionary<string, string>();
 
-            using (MonitorDbContext context = new MonitorDbContext())
+            using (ImsDbContext context = new ImsDbContext())
             {
-                listData.Add(-1, "-全选-");
+                listData.Add(" ", "-全选-");
                 foreach(var query in context.Departments)
                 {
-                    listData.Add(query.DepartmentID, query.DepartmentName);
+                    listData.Add(query.DepartmentID.ToString(), query.DepartmentName);
                 }
             }
             return listData;
         }
-        public Dictionary<Int64, string> GetMonitorItemDic()
+        public Dictionary<string, string> GetMonitorItemDic()
         {
-            Dictionary<Int64, string> listData = new Dictionary<Int64, string>();
-            using (MonitorDbContext context = new MonitorDbContext())
+            Dictionary<string, string> listData = new Dictionary<string, string>();
+            using (ImsDbContext context = new ImsDbContext())
             {
-                listData.Add(-1, "-全选-");
+                listData.Add(" ", "-全选-");
 
-                foreach (var query in context.MonitorItems)
+                foreach (var query in context.Indicators)
                 {
-                    listData.Add(query.MonitorItemID, query.MonitorName);
+                    listData.Add(query.IndicatorID.ToString(), query.Name);
                 }
             }
             return listData;
         }
-        public Dictionary<Int64, string> GetDepartmentTypeDic()
+        public Dictionary<string, string> GetDepartmentTypeDic()
         {
-            Dictionary<Int64, string> listData = new Dictionary<Int64, string>();
-            using (MonitorDbContext context = new MonitorDbContext())
+            Dictionary<string, string> listData = new Dictionary<string, string>();
+            using (ImsDbContext context = new ImsDbContext())
             {
-                listData.Add(-1, "-全选-");
+                listData.Add(" ", "-全选-");
 
-                foreach (var query in context.DepartmentTypes)
+                foreach (var query in context.DepartmentCategories)
                 {
-                    listData.Add(query.DepartmentTypeID, query.TypeName);
+                    listData.Add(query.DepartmentCategoryID.ToString(), query.Name);
                 }
             }
             return listData;

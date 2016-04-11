@@ -200,8 +200,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Monitor\AddMonitorData.aspx" />
-    <Content Include="Monitor\DepartmentMonitor.aspx" />
     <Content Include="Monitor\MonitorList.aspx" />
     <Content Include="Monitor\Web.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -420,41 +418,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ImsDbContextMigrations\201604110220498_InitialDataBase.cs" />
+    <Compile Include="ImsDbContextMigrations\201604110220498_InitialDataBase.Designer.cs">
+      <DependentUpon>201604110220498_InitialDataBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.cs" />
+    <Compile Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.Designer.cs">
+      <DependentUpon>201604110227307_DeleteIDinDepartmentCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Logic\GetBaseData.cs" />
     <Compile Include="Logic\InitialItemData.cs" />
+    <Compile Include="Logic\WriteBaseData.cs" />
     <Compile Include="Models\IndicatorMonitorModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="MonitorDbContextMigrations\201604091216006_CreateMonitorDataBase.cs" />
-    <Compile Include="MonitorDbContextMigrations\201604091216006_CreateMonitorDataBase.Designer.cs">
-      <DependentUpon>201604091216006_CreateMonitorDataBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MonitorDbContextMigrations\201604100059293_AddDepartmentType.cs" />
-    <Compile Include="MonitorDbContextMigrations\201604100059293_AddDepartmentType.Designer.cs">
-      <DependentUpon>201604100059293_AddDepartmentType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MonitorDbContextMigrations\201604100116430_AddTypeRemark.cs" />
-    <Compile Include="MonitorDbContextMigrations\201604100116430_AddTypeRemark.Designer.cs">
-      <DependentUpon>201604100116430_AddTypeRemark.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MonitorDbContextMigrations\201604100837481_AddDepartmentMonitorInType.cs" />
-    <Compile Include="MonitorDbContextMigrations\201604100837481_AddDepartmentMonitorInType.Designer.cs">
-      <DependentUpon>201604100837481_AddDepartmentMonitorInType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MonitorDbContextMigrations\Configuration.cs" />
-    <Compile Include="Monitor\AddMonitorData.aspx.cs">
-      <DependentUpon>AddMonitorData.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Monitor\AddMonitorData.aspx.designer.cs">
-      <DependentUpon>AddMonitorData.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Monitor\DepartmentMonitor.aspx.cs">
-      <DependentUpon>DepartmentMonitor.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Monitor\DepartmentMonitor.aspx.designer.cs">
-      <DependentUpon>DepartmentMonitor.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Monitor\MonitorList.aspx.cs">
       <DependentUpon>MonitorList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -493,17 +470,11 @@
     <EmbeddedResource Include="ApplicationDbContextMigrations\201604091206045_CreateUserDataBase.resx">
       <DependentUpon>201604091206045_CreateUserDataBase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MonitorDbContextMigrations\201604091216006_CreateMonitorDataBase.resx">
-      <DependentUpon>201604091216006_CreateMonitorDataBase.cs</DependentUpon>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604110220498_InitialDataBase.resx">
+      <DependentUpon>201604110220498_InitialDataBase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MonitorDbContextMigrations\201604100059293_AddDepartmentType.resx">
-      <DependentUpon>201604100059293_AddDepartmentType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MonitorDbContextMigrations\201604100116430_AddTypeRemark.resx">
-      <DependentUpon>201604100116430_AddTypeRemark.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MonitorDbContextMigrations\201604100837481_AddDepartmentMonitorInType.resx">
-      <DependentUpon>201604100837481_AddDepartmentMonitorInType.cs</DependentUpon>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.resx">
+      <DependentUpon>201604110227307_DeleteIDinDepartmentCategory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

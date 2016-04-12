@@ -6,11 +6,25 @@ using OperateExcel;
 using IMS.Models;
 namespace IMS.Logic
 {
+    public class IndicatorItem
+    {
+        public string Name { get; set; }
+        public string Unit { get; set; }
+        public string IsAuto { get; set; }
+        public string DataSystem { get; set; }
+        public string Department { get; set; }
+        public string Remarks { get; set; }
+        public string DutyDepartment { get; set; }
+    }
     public class InitialItemData
     {
+
         public InitialItemData()
         {
         }
+        /// <summary>
+        /// 初始化科室与科室类别
+        /// </summary>
         public void InitialDepartmentAndCategory()
         {
             var departmentCategoryFile = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager.AppSettings["DepartmentCategory"]);
@@ -51,6 +65,37 @@ namespace IMS.Logic
 
             }
         }
+        /// <summary>
+        /// 初始化Indicator项目
+        /// </summary>
+        public void InitialIndicator()
+        {
+            var indicatorFile = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager.AppSettings["Indicator"]);
+            ReadFromExcel readFromExcel = new ReadFromExcel();
+            //按Row获取当前行的所有数据
+            //先获Row总数，从第二行开始取数据，第一行为标题
+            int rowCount = readFromExcel.GetRowCount(indicatorFile);
+            for (int i = 2; i <= rowCount; i++)
+            {
+                var columnData = readFromExcel.ReadRowFromExcel((uint)i, indicatorFile);
+                //将该列按照IndicatorItem录入，再插入到数据库
+                if (columnData.Count > 0)
+                {
+                    IndicatorItem indicatorItem = new IndicatorItem();
+                    //按照顺序填充
+                    indicatorItem.Name = columnData.ElementAt(0);
+                    indicatorItem.Unit = columnData.ElementAt(1);
+                    indicatorItem.IsAuto = columnData.ElementAt(2);
+                    indicatorItem.DataSystem = columnData.ElementAt(3);
+                    indicatorItem.Department = columnData.ElementAt(4);
+                    indicatorItem.Remarks = columnData.ElementAt(5);
+                    indicatorItem.DutyDepartment = columnData.ElementAt(6);
 
+                    //写入数据库
+                    WriteBaseData writeBaseData = new WriteBaseData();
+                    writeBaseData.AddIndicator(indicatorItem);
+                }
+            }
+        }
     }
 }

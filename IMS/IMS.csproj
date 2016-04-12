@@ -434,6 +434,14 @@
     <Compile Include="ImsDbContextMigrations\201604111241110_UpdateUnitPosition.Designer.cs">
       <DependentUpon>201604111241110_UpdateUnitPosition.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImsDbContextMigrations\201604121240317_AddDataSourceSystem.cs" />
+    <Compile Include="ImsDbContextMigrations\201604121240317_AddDataSourceSystem.Designer.cs">
+      <DependentUpon>201604121240317_AddDataSourceSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604121247459_AddDutyDepartmentInIndicator.cs" />
+    <Compile Include="ImsDbContextMigrations\201604121247459_AddDutyDepartmentInIndicator.Designer.cs">
+      <DependentUpon>201604121247459_AddDutyDepartmentInIndicator.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Logic\GetBaseData.cs" />
     <Compile Include="Logic\InitialItemData.cs" />
@@ -489,6 +497,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604111241110_UpdateUnitPosition.resx">
       <DependentUpon>201604111241110_UpdateUnitPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604121240317_AddDataSourceSystem.resx">
+      <DependentUpon>201604121240317_AddDataSourceSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604121247459_AddDutyDepartmentInIndicator.resx">
+      <DependentUpon>201604121247459_AddDutyDepartmentInIndicator.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

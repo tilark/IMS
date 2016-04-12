@@ -61,6 +61,10 @@ namespace OperateExcel
                     {
                         //根据DataType读取数据
                         text = GetCellValue(workbookPart, cell);
+                        if (String.IsNullOrEmpty(text))
+                        {
+                            text = "NA";
+                        }
                         ListData.Add(text);
                     }
                 }

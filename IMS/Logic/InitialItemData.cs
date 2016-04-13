@@ -97,5 +97,52 @@ namespace IMS.Logic
                 }
             }
         }
+
+        public void InitialDepartmentCategoryIndicatorMap()
+        {
+            var fileName = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager.AppSettings["DepartmentCategoryIndicatorMap"]);
+            ReadFromExcel readFromExcel = new ReadFromExcel();
+            //按Row获取当前行的所有数据
+            //第一行为列标题，第二行开始是数据
+            int rowCount = readFromExcel.GetRowCount(fileName);
+            for (int i = 2; i <= rowCount; i++)
+            {
+                var columnData = readFromExcel.ReadRowFromExcel((uint)i, fileName);
+                //获取第一个数为科室类别
+                if (columnData.Count > 0)
+                {
+                    var firstData = columnData.First();
+
+                    WriteBaseData writeBaseData = new WriteBaseData();
+                    DepartmentCategory departmentCategory = new DepartmentCategory();
+                    //将第一个数当作类别，插入科室类别表中
+                    departmentCategory.Name = firstData;
+                    departmentCategory = writeBaseData.AddDepartmentCategory(departmentCategory);
+                    if (departmentCategory == null)
+                    {
+                        return;
+                    }
+                    columnData.Remove(firstData);
+                    //第二列及之后的数据为项目名称
+                    foreach (var data in columnData)
+                    {
+                        //依次将第二个列之后的项目插入到科室类别项目表中
+                        //如果该项目不在数据库，继续下一个数据
+                        var indicator = writeBaseData.FindIndicatorByName(data);
+                        if(indicator == null)
+                        {
+                            continue;
+                        }
+                        //将Indicator添加进去
+                        
+                        DepartmentCategoryIndicatorMap item = new DepartmentCategoryIndicatorMap();
+                        item.DepartmentCategoryID = departmentCategory.DepartmentCategoryID;
+                        item.IndicatorID = indicator.IndicatorID;
+                        writeBaseData.AddDepartmentCategoryIndicatorMap(item);
+
+                    }
+                }
+            }
+        }
     }
 }

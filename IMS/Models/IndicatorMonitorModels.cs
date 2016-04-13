@@ -86,12 +86,12 @@ namespace IMS.Models
         /// Gets or sets the department identifier.
         /// </summary>
         /// <value>The department identifier.</value>
-        public Guid DepartmentID { get; set; }
+        public Guid? DepartmentID { get; set; }
         /// <summary>
         /// Gets or sets the monitor item identifier.
         /// </summary>
         /// <value>The monitor item identifier.</value>
-        public Guid IndicatorID { get; set; }
+        public Guid? IndicatorID { get; set; }
         /// <summary>
         /// Gets or sets the Indicator value.
         /// </summary>
@@ -106,7 +106,7 @@ namespace IMS.Models
         /// <value>The time.</value>
         [Display(Name = "监测时间")]
 
-        public DateTime Time { get; set; }
+        public DateTime? Time { get; set; }
         /// <summary>
         /// Gets or sets the department.
         /// </summary>
@@ -143,14 +143,14 @@ namespace IMS.Models
         [Display(Name = "科室编号")]
         [ScaffoldColumn(false)]
         public Guid DepartmentID { get; set; }
-        public Guid DepartmentCategoryID { get; set; }
+        public Guid? DepartmentCategoryID { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the department.
         /// </summary>
         /// <value>The name of the department.</value>
         [Display(Name = "科室名称")]
-
+        [Required]
         public string DepartmentName { get; set; }
         /// <summary>
         /// Gets or sets the remark.
@@ -185,6 +185,7 @@ namespace IMS.Models
             this.DepartmentIndicatorStandardValues = new List<DepartmentIndicatorStandardValue>();
             this.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
             this.DepartmentCategoryIndicatorMaps = new List<DepartmentCategoryIndicatorMap>();
+            this.IsAutoGetData = false;
         }
         [Key]
         [Display(Name = "项目编号")]
@@ -194,6 +195,8 @@ namespace IMS.Models
         /// 项目数据来源部门，需设为可为空.
         /// </summary>
         /// <value>The department identifier.</value>
+        /// 
+        [Required]
         [Display(Name = "项目名称")]
         public string Name { get; set; }
         [Display(Name = "单位")]
@@ -202,10 +205,10 @@ namespace IMS.Models
         public Boolean IsAutoGetData { get; set; }
         [Display(Name = "数据来源部门")]
 
-        public Guid DepartmentID { get; set; }
+        public Guid? DepartmentID { get; set; }
         [Display(Name = "数据来源系统")]
 
-        public Guid DataSourceSystemID { get; set; }
+        public Guid? DataSourceSystemID { get; set; }
         [Display(Name = "责任部门")]
 
         public string DutyDepartment { get; set; }
@@ -236,7 +239,7 @@ namespace IMS.Models
         [ScaffoldColumn(false)]
         public Guid ID { get; set; }
         [Display(Name = "数据来源")]
-
+        [Required]
         public string Name { get; set; }
         [Display(Name = "备注")]
 
@@ -262,8 +265,8 @@ namespace IMS.Models
         [Display(Name = "类型编号")]
         [ScaffoldColumn(false)]
         public Guid DepartmentCategoryID { get; set; }
-
-        [Display(Name = "类型名称")]
+        [Required]
+        [Display(Name = "类别名称")]
         [MaxLength(128)]
 
         public string Name { get; set; }
@@ -283,8 +286,8 @@ namespace IMS.Models
     {
         [Key]
         public Guid ID { get; set; }
-        public Guid DepartmentCategoryID { get; set; }
-        public Guid IndicatorID { get; set; }
+        public Guid? DepartmentCategoryID { get; set; }
+        public Guid? IndicatorID { get; set; }
         [ForeignKey("DepartmentCategoryID")]
 
         public virtual DepartmentCategory DepartmentCategory { get; set; }
@@ -302,8 +305,8 @@ namespace IMS.Models
     {
         [Key]
         public Guid ID { get; set; }
-        public Guid DepartmentID { get; set; }
-        public Guid IndicatorID { get; set; }
+        public Guid? DepartmentID { get; set; }
+        public Guid? IndicatorID { get; set; }
         public virtual Department Department { get; set; }
         public virtual Indicator Indicator { get; set; }
 

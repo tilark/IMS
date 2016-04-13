@@ -19,6 +19,7 @@ namespace IMS
             InitialItemData initialItemData = new InitialItemData();
             initialItemData.InitialDepartmentAndCategory();
             initialItemData.InitialIndicator();
+            initialItemData.InitialDepartmentCategoryIndicatorMap();
         }
     }
 }

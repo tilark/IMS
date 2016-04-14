@@ -17,6 +17,7 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 /// <summary>
 /// The Models namespace.
 /// </summary>
@@ -50,7 +51,16 @@ namespace IMS.Models
         public DbSet<DepartmentCategory> DepartmentCategories { get; set; }
         public DbSet<DepartmentCategoryIndicatorMap> DepartmentCategoryIndicatorMaps { get; set; }
         public DbSet<DepartmentIndicatorStandardValue> DepartmentIndicatorStandardValues { get; set; }
+        public DbSet<DataSourceSystem> DataSourceSystems { get; set; }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            //取消Indicator与Department和DataSourceSystem之间的级联删除
+            modelBuilder.Entity<Indicator>().Property(t => t.DepartmentID).IsOptional();
+            modelBuilder.Entity<Indicator>().Property(t => t.DataSourceSystemID).IsOptional();
+
+        }
     }
     /// <summary>
     /// DepartmentIndicatorValue.科室项目的多对多的值表
@@ -76,13 +86,12 @@ namespace IMS.Models
         /// Gets or sets the department identifier.
         /// </summary>
         /// <value>The department identifier.</value>
-        public Guid DepartmentID { get; set; }
+        public Guid? DepartmentID { get; set; }
         /// <summary>
         /// Gets or sets the monitor item identifier.
         /// </summary>
         /// <value>The monitor item identifier.</value>
-        public Guid IndicatorID { get; set; }
-
+        public Guid? IndicatorID { get; set; }
         /// <summary>
         /// Gets or sets the Indicator value.
         /// </summary>
@@ -97,16 +106,19 @@ namespace IMS.Models
         /// <value>The time.</value>
         [Display(Name = "监测时间")]
 
-        public DateTime Time { get; set; }
+        public DateTime? Time { get; set; }
         /// <summary>
         /// Gets or sets the department.
         /// </summary>
         /// <value>The department.</value>
+        [ForeignKey("DepartmentID")]
         public virtual Department Department { get; set; }
         /// <summary>
         /// Gets or sets the monitor item.
         /// </summary>
         /// <value>The monitor item.</value>
+        [ForeignKey("IndicatorID")]
+
         public virtual Indicator Indicator { get; set; }
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
@@ -117,6 +129,12 @@ namespace IMS.Models
     /// </summary>
     public class Department
     {
+        public Department()
+        {
+            this.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
+            this.DepartmentIndicatorStandardValues = new List<DepartmentIndicatorStandardValue>();
+            this.Indicators = new List<Indicator>();
+        }
         /// <summary>
         /// Gets or sets the department identifier.
         /// </summary>
@@ -125,13 +143,14 @@ namespace IMS.Models
         [Display(Name = "科室编号")]
         [ScaffoldColumn(false)]
         public Guid DepartmentID { get; set; }
-        public Guid DepartmentCategoryID { get; set; }
+        public Guid? DepartmentCategoryID { get; set; }
+
         /// <summary>
         /// Gets or sets the name of the department.
         /// </summary>
         /// <value>The name of the department.</value>
         [Display(Name = "科室名称")]
-
+        [Required]
         public string DepartmentName { get; set; }
         /// <summary>
         /// Gets or sets the remark.
@@ -142,8 +161,15 @@ namespace IMS.Models
         /// Gets or sets the department monitor.
         /// </summary>
         /// <value>The department monitor.</value>
-        public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValue { get; set; }
-        public virtual ICollection<DepartmentIndicatorStandardValue> DepartmentIndicatorStandardValue { get; set; }
+        public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }
+        public virtual ICollection<DepartmentIndicatorStandardValue> DepartmentIndicatorStandardValues { get; set; }
+        /// <summary>
+        /// 部门负责的项目集合.
+        /// </summary>
+        /// <value>The indicators.</value>
+        public virtual ICollection<Indicator> Indicators { get; set; }
+        [ForeignKey("DepartmentCategoryID")]
+
         public virtual DepartmentCategory DepartmentCategory { get; set; }
 
         [Timestamp]
@@ -154,18 +180,71 @@ namespace IMS.Models
     /// </summary>
     public class Indicator
     {
+        public Indicator()
+        {
+            this.DepartmentIndicatorStandardValues = new List<DepartmentIndicatorStandardValue>();
+            this.DepartmentIndicatorValues = new List<DepartmentIndicatorValue>();
+            this.DepartmentCategoryIndicatorMaps = new List<DepartmentCategoryIndicatorMap>();
+            this.IsAutoGetData = false;
+        }
         [Key]
         [Display(Name = "项目编号")]
         [ScaffoldColumn(false)]
         public Guid IndicatorID { get; set; }
+        /// <summary>
+        /// 项目数据来源部门，需设为可为空.
+        /// </summary>
+        /// <value>The department identifier.</value>
+        /// 
+        [Required]
         [Display(Name = "项目名称")]
         public string Name { get; set; }
+        [Display(Name = "单位")]
+        public string Unit { get; set; }
+        [Display(Name = "自动获取数据")]
+        public Boolean IsAutoGetData { get; set; }
+        [Display(Name = "数据来源部门")]
+
+        public Guid? DepartmentID { get; set; }
+        [Display(Name = "数据来源系统")]
+
+        public Guid? DataSourceSystemID { get; set; }
+        [Display(Name = "责任部门")]
+
+        public string DutyDepartment { get; set; }
         [Display(Name = "项目备注")]
         public string Remarks { get; set; }
-        public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValue { get; set; }
-        public virtual ICollection<DepartmentIndicatorStandardValue> DepartmentIndicatorStandardValue { get; set; }
-        public virtual ICollection<DepartmentCategoryIndicatorMap> DepartmentCategoryIndicatorMap { get; set; }
+        public virtual ICollection<DepartmentIndicatorValue> DepartmentIndicatorValues { get; set; }
+        public virtual ICollection<DepartmentIndicatorStandardValue> DepartmentIndicatorStandardValues { get; set; }
+        public virtual ICollection<DepartmentCategoryIndicatorMap> DepartmentCategoryIndicatorMaps { get; set; }
+        [ForeignKey("DepartmentID")]
 
+        public virtual Department Department { get; set; }
+        [ForeignKey("DataSourceSystemID")]
+
+        public virtual DataSourceSystem DataSourceSystem { get; set; }
+
+        [Timestamp]
+        public Byte[] TimeStamp { get; set; }
+
+    }
+    public class DataSourceSystem
+    {
+        public DataSourceSystem()
+        {
+            this.Indicators = new List<Indicator>();
+        }
+        [Key]
+        [Display(Name = "项目编号")]
+        [ScaffoldColumn(false)]
+        public Guid ID { get; set; }
+        [Display(Name = "数据来源")]
+        [Required]
+        public string Name { get; set; }
+        [Display(Name = "备注")]
+
+        public string Remarks { get; set; }
+        public ICollection<Indicator> Indicators { get; set; }
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
 
@@ -177,20 +256,25 @@ namespace IMS.Models
 
     public class DepartmentCategory
     {
+        public DepartmentCategory()
+        {
+            this.Departments = new HashSet<Department>();
+            this.DepartmentCategoryIndicatorMaps = new List<DepartmentCategoryIndicatorMap>();
+        }
         [Key]
         [Display(Name = "类型编号")]
         [ScaffoldColumn(false)]
         public Guid DepartmentCategoryID { get; set; }
-
-        [Display(Name = "类型名称")]
+        [Required]
+        [Display(Name = "类别名称")]
         [MaxLength(128)]
 
         public string Name { get; set; }
         [Display(Name = "备注")]
 
         public string Remarks { get; set; }
-        public virtual ICollection<Department> Department { get; set; }
-        public virtual ICollection<DepartmentCategoryIndicatorMap> DepartmentCategoryIndicatorMap { get; set; }
+        public virtual ICollection<Department> Departments { get; set; }
+        public virtual ICollection<DepartmentCategoryIndicatorMap> DepartmentCategoryIndicatorMaps { get; set; }
 
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
@@ -202,9 +286,13 @@ namespace IMS.Models
     {
         [Key]
         public Guid ID { get; set; }
-        public Guid DepartmentCategoryID { get; set; }
-        public Guid IndicatorID { get; set; }
+        public Guid? DepartmentCategoryID { get; set; }
+        public Guid? IndicatorID { get; set; }
+        [ForeignKey("DepartmentCategoryID")]
+
         public virtual DepartmentCategory DepartmentCategory { get; set; }
+        [ForeignKey("IndicatorID")]
+
         public virtual Indicator Indicator { get; set; }
 
         [Timestamp]
@@ -217,10 +305,11 @@ namespace IMS.Models
     {
         [Key]
         public Guid ID { get; set; }
-        public Guid DepartmentID { get; set; }
-        public Guid IndicatorID { get; set; }
+        public Guid? DepartmentID { get; set; }
+        public Guid? IndicatorID { get; set; }
         public virtual Department Department { get; set; }
         public virtual Indicator Indicator { get; set; }
+
         [Display(Name = "比较方式")]
         [MaxLength(30)]
         public string CompareMethod { get; set; }

@@ -178,6 +178,8 @@
     <Content Include="Account\VerifyPhoneNumber.aspx" />
     <Content Include="Admin\Department.aspx" />
     <Content Include="Admin\DepartmentCategory.aspx" />
+    <Content Include="Admin\DepartmentCategoryIndicatorMap.aspx" />
+    <Content Include="Admin\DepartmentIndicatoTest.aspx" />
     <Content Include="Admin\Indicator.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
@@ -380,6 +382,20 @@
     <Compile Include="Admin\DepartmentCategory.aspx.designer.cs">
       <DependentUpon>DepartmentCategory.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\DepartmentCategoryIndicatorMap.aspx.cs">
+      <DependentUpon>DepartmentCategoryIndicatorMap.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DepartmentCategoryIndicatorMap.aspx.designer.cs">
+      <DependentUpon>DepartmentCategoryIndicatorMap.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DepartmentIndicatoTest.aspx.cs">
+      <DependentUpon>DepartmentIndicatoTest.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DepartmentIndicatoTest.aspx.designer.cs">
+      <DependentUpon>DepartmentIndicatoTest.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\Indicator.aspx.cs">
       <DependentUpon>Indicator.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -387,9 +403,9 @@
     <Compile Include="Admin\Indicator.aspx.designer.cs">
       <DependentUpon>Indicator.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ApplicationDbContextMigrations\201604091206045_CreateUserDataBase.cs" />
-    <Compile Include="ApplicationDbContextMigrations\201604091206045_CreateUserDataBase.Designer.cs">
-      <DependentUpon>201604091206045_CreateUserDataBase.cs</DependentUpon>
+    <Compile Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.cs" />
+    <Compile Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.Designer.cs">
+      <DependentUpon>201604111211096_CreateUserDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="ApplicationDbContextMigrations\Configuration.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -427,6 +443,26 @@
     <Compile Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.cs" />
     <Compile Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.Designer.cs">
       <DependentUpon>201604110227307_DeleteIDinDepartmentCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604111218160_AddIndicatorUnit.cs" />
+    <Compile Include="ImsDbContextMigrations\201604111218160_AddIndicatorUnit.Designer.cs">
+      <DependentUpon>201604111218160_AddIndicatorUnit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604111241110_UpdateUnitPosition.cs" />
+    <Compile Include="ImsDbContextMigrations\201604111241110_UpdateUnitPosition.Designer.cs">
+      <DependentUpon>201604111241110_UpdateUnitPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604121240317_AddDataSourceSystem.cs" />
+    <Compile Include="ImsDbContextMigrations\201604121240317_AddDataSourceSystem.Designer.cs">
+      <DependentUpon>201604121240317_AddDataSourceSystem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604121247459_AddDutyDepartmentInIndicator.cs" />
+    <Compile Include="ImsDbContextMigrations\201604121247459_AddDutyDepartmentInIndicator.Designer.cs">
+      <DependentUpon>201604121247459_AddDutyDepartmentInIndicator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604130223235_AddRequireForName.cs" />
+    <Compile Include="ImsDbContextMigrations\201604130223235_AddRequireForName.Designer.cs">
+      <DependentUpon>201604130223235_AddRequireForName.cs</DependentUpon>
     </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Logic\GetBaseData.cs" />
@@ -476,14 +512,29 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ApplicationDbContextMigrations\201604091206045_CreateUserDataBase.resx">
-      <DependentUpon>201604091206045_CreateUserDataBase.cs</DependentUpon>
+    <EmbeddedResource Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.resx">
+      <DependentUpon>201604111211096_CreateUserDatabase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604110220498_InitialDataBase.resx">
       <DependentUpon>201604110220498_InitialDataBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604110227307_DeleteIDinDepartmentCategory.resx">
       <DependentUpon>201604110227307_DeleteIDinDepartmentCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604111218160_AddIndicatorUnit.resx">
+      <DependentUpon>201604111218160_AddIndicatorUnit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604111241110_UpdateUnitPosition.resx">
+      <DependentUpon>201604111241110_UpdateUnitPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604121240317_AddDataSourceSystem.resx">
+      <DependentUpon>201604121240317_AddDataSourceSystem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604121247459_AddDutyDepartmentInIndicator.resx">
+      <DependentUpon>201604121247459_AddDutyDepartmentInIndicator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604130223235_AddRequireForName.resx">
+      <DependentUpon>201604130223235_AddRequireForName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

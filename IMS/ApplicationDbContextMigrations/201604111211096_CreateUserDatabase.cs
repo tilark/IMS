@@ -3,7 +3,7 @@ namespace IMS.ApplicationDbContextMigrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class CreateUserDataBase : DbMigration
+    public partial class CreateUserDatabase : DbMigration
     {
         public override void Up()
         {
@@ -35,9 +35,7 @@ namespace IMS.ApplicationDbContextMigrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 128),
-                        Department1 = c.String(nullable: true, maxLength: 128),
-                        Department2 = c.String(nullable: true, maxLength: 128),
-                        Department3 = c.String(nullable: true, maxLength: 128),
+                        Department = c.String(),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),

@@ -28,15 +28,15 @@ namespace OperateExcel
                     rowCount = sheetData.Elements<Row>().Count();
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception ex)
             {
-
+                string errorMess = ex.Message;
             }
             return rowCount;
 
         }
         /// <summary>
-        /// 根据指定的Row读取该行所有数据，并返回.
+        /// 读取指定Excel文件名的第一个工作簿，根据指定的Row读取该行所有数据，并返回列表.
         /// </summary>
         /// <param name="rowIndex">Index of the row.</param>
         /// <param name="fileName">Name of the file.</param>
@@ -65,10 +65,12 @@ namespace OperateExcel
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception ex)
             {
 
                 //如果文件不存在，会引发该异常，不处理，直接返回NULL值
+                string errorMess = ex.Message;
+
             }
             return ListData;
         }
@@ -99,10 +101,11 @@ namespace OperateExcel
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception ex)
             {
-                ListData.Add(ex.Message);
                 //如果文件不存在，会引发该异常，不处理，直接返回NULL值
+                string errorMess = ex.Message;
+
             }
             return ListData;
 
@@ -148,10 +151,11 @@ namespace OperateExcel
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (Exception ex)
             {
                 //如果文件不存在，会引发该异常，不处理，直接返回NULL值
-                ListData.Add(ex.Message);
+                string errorMess = ex.Message;
+
 
             }
             return ListData;
@@ -168,9 +172,10 @@ namespace OperateExcel
         private string GetCellValue(WorkbookPart workbookPart, Cell cell)
         {
             string value = null;
-            if (cell != null)
+            if (cell != null && cell.HasChildren)
             {
-                value = cell.InnerText;
+                //value = cell.InnerText;
+                value = cell.CellValue.Text;
 
                 if (cell.DataType != null)
                 {

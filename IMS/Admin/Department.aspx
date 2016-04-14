@@ -37,7 +37,7 @@
                             <asp:Label runat="server" ID="lblName" Visible="true" Text="<%# Item.DepartmentName %>"></asp:Label>
                         </td>
                         <td>
-                            <asp:Label runat="server" ID="lblRemark" Visible="true" Text="<%# Item.Remark %>"></asp:Label>
+                            <asp:Label runat="server" ID="lblRemark" Visible="true" Text="<%# Item.Remarks %>"></asp:Label>
                         </td>
 
                         <td>
@@ -54,7 +54,7 @@
                         <td>
                             <asp:TextBox runat="server" ID="txtEditName" Visible="true" CssClass="form-control" Text="<%#Item.DepartmentName %>"></asp:TextBox></td>
                         <td>
-                            <asp:TextBox runat="server" ID="txtEditRemark" Visible="true" CssClass="form-control" Text="<%#Item.Remark %>"></asp:TextBox></td>
+                            <asp:TextBox runat="server" ID="txtEditRemark" Visible="true" CssClass="form-control" Text="<%#Item.Remarks %>"></asp:TextBox></td>
 
                         <td>
                             <asp:Button ID="UpdateButton" runat="server" CommandName="Update" Text="Update" CssClass="btn btn-info" />

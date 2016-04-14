@@ -202,7 +202,9 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Monitor\MonitorList.aspx" />
     <Content Include="Monitor\Web.config" />
+    <Content Include="Reporter\Web.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Reporter\ReportTest1.aspx" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -440,6 +442,13 @@
       <DependentUpon>MonitorList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reporter\ReportTest1.aspx.cs">
+      <DependentUpon>ReportTest1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reporter\ReportTest1.aspx.designer.cs">
+      <DependentUpon>ReportTest1.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

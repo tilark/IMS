@@ -19,9 +19,9 @@
     <div class="form-horizontal">
 
         <div class="form-group">
-            <asp:Label runat="server" AssociatedControlID="dlDepartment" CssClass="col-md-2 control-label">科室</asp:Label>
+            <asp:Label runat="server" AssociatedControlID="dlDepartment" CssClass="col-md-2 control-label">来源系统</asp:Label>
             <div class="col-md-3">
-                <asp:DropDownList ID="dlDepartment" CssClass="form-control" runat="server"></asp:DropDownList>
+                <asp:DropDownList ID="dlSourceSystem" CssClass="form-control" runat="server"></asp:DropDownList>
 
             </div>
             <div class="col-md-4">

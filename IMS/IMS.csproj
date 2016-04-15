@@ -52,7 +52,7 @@
       <HintPath>..\..\..\program files (x86)\Open XML SDK\V2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="ImsAutoLib">
-      <HintPath>..\..\..\Program Files (x86)\ImsAutoLib\ImsAutoLib.dll</HintPath>
+      <HintPath>..\ImsAutoLib\ImsAutoLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -486,8 +486,17 @@
     <Compile Include="ImsDbContextMigrations\201604150858152_DecimalToValue.Designer.cs">
       <DependentUpon>201604150858152_DecimalToValue.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImsDbContextMigrations\201604151455161_AddIndicatorAlgorithm.cs" />
+    <Compile Include="ImsDbContextMigrations\201604151455161_AddIndicatorAlgorithm.Designer.cs">
+      <DependentUpon>201604151455161_AddIndicatorAlgorithm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604151508520_ReWriteIndicatorAlgorithm.cs" />
+    <Compile Include="ImsDbContextMigrations\201604151508520_ReWriteIndicatorAlgorithm.Designer.cs">
+      <DependentUpon>201604151508520_ReWriteIndicatorAlgorithm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Logic\GetBaseData.cs" />
+    <Compile Include="Logic\IndicatorValue.cs" />
     <Compile Include="Logic\InitialItemData.cs" />
     <Compile Include="Logic\WriteBaseData.cs" />
     <Compile Include="Models\IndicatorMonitorModels.cs" />
@@ -584,6 +593,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604150858152_DecimalToValue.resx">
       <DependentUpon>201604150858152_DecimalToValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604151455161_AddIndicatorAlgorithm.resx">
+      <DependentUpon>201604151455161_AddIndicatorAlgorithm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604151508520_ReWriteIndicatorAlgorithm.resx">
+      <DependentUpon>201604151508520_ReWriteIndicatorAlgorithm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

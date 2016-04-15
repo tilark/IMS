@@ -9,7 +9,7 @@ using IMS.Logic;
 using IMS.Models;
 using System.Data.Entity.Infrastructure;
 using System.Web.ModelBinding;
-using ImsAutoLib;
+//using ImsAutoLib;
 namespace IMS.Monitor
 {
     public partial class AddIndicatorValueAuto : System.Web.UI.Page
@@ -26,65 +26,26 @@ namespace IMS.Monitor
             //添加时需对该用户进行权限检测，如果不属于该科室成员，不能够新增项目数据
 
             //将找到该项目的来源部门。
-            if (dlDepartment == null || txtDate == null || String.IsNullOrEmpty(txtDate.Text))
+            if (dlSourceSystem == null || txtDate == null || String.IsNullOrEmpty(txtDate.Text))
             {
                 return;
             }
             try
             {
-                var departmentID = Guid.Parse(dlDepartment.SelectedValue);
+                //根据下拉列表的选项，选择不同的操作方式，如果是来源于病案管理系统，为方法1，如果来源于计算值，为方法2
+                var dlSourceSystemId = Guid.Parse(dlSourceSystem.SelectedValue);
+                var sourceSystemName = dlSourceSystem.SelectedItem.Text;
                 var addTime = DateTime.Parse(txtDate.Text);
-                using (ImsDbContext context = new ImsDbContext())
+
+                if (sourceSystemName == "病案管理系统")
                 {
-                    //1 由项目来源部门找出管属项目
-
-                    var indicatorItems = context.Indicators.Where(i => i.DepartmentID != null && i.DepartmentID == departmentID).OrderBy(i => i.Name).ToList();
-                    foreach (var indicator in indicatorItems)
-                    {
-                        //2 管属项目找到对应的科室类别项目映射表，找到对应科室类别
-                        var departmentCategoryIndicators = indicator.DepartmentCategoryIndicatorMaps.ToList();
-                        //var departmentCategoryIndicators = context.DepartmentCategoryIndicatorMaps.Where(d => d.IndicatorID == indicator.IndicatorID).ToList();
-                        //列举出对应的科室类别，再由此找到每个科室
-                        foreach (var categoryIndicator in departmentCategoryIndicators)
-                        {
-                            //3 通过科室类别找到管辖的科室，逐一与项目组合，添加到科室项目值表
-                            var departmentCategory = categoryIndicator.DepartmentCategory;
-                            if (departmentCategory == null)
-                            {
-                                continue;
-                            }
-                            var departments = departmentCategory.Departments;
-                            //列出该科室负责的填报项目，再逐步添加到值表中。
-
-                            foreach (var department in departments)
-                            {
-                                //需先查重，如果已经该项目已存在于数据库，不添加
-                                //检查下一项
-                                var query = context.DepartmentIndicatorValues.Where(d => d.DepartmentID == department.DepartmentID && d.IndicatorID == indicator.IndicatorID
-                                && d.Time.Year == addTime.Year && d.Time.Month == addTime.Month).FirstOrDefault();
-                                if (query != null)
-                                {
-                                    continue;
-                                }
-                                else
-                                {
-                                    //不存在该项目，需添加到数据库
-                                    IMS.Models.DepartmentIndicatorValue item = new IMS.Models.DepartmentIndicatorValue();
-                                    item.DepartmentID = department.DepartmentID;
-                                    item.IndicatorID = indicator.IndicatorID;
-                                    item.Time = addTime;
-                                    item.ID = System.Guid.NewGuid();
-                                    var bagl = new ImsAutoLib.Bagl.Bagl();
-                                    var valueReturned = bagl.GetIndicatorValue(item.DepartmentID.Value, item.IndicatorID.Value, item.Time);
-                                    item.Value = valueReturned;
-                                    context.DepartmentIndicatorValues.Add(item);
-                                    context.SaveChanges();
-                                }
-
-                            }
-                        }
-                    }
+                    AddDepartmentIndicatorValueByMRMS(dlSourceSystemId, addTime);
                 }
+                else if(sourceSystemName == "计算")
+                {
+                    AddDepartmentIndicatorValueByCalculation(dlSourceSystemId, addTime);
+                }
+                
                 //需更新该页面 通过改变Message的值，会调用lvIndicatorValue_GetData
                 //添加时间过长时，通过UpdateProcessing显示模态提示框，并能够显示进度条，添加成功后，关闭模态框
                 Message.Text = "添加项目成功！";
@@ -97,12 +58,73 @@ namespace IMS.Monitor
 
 
         }
+
+        private void AddDepartmentIndicatorValueByCalculation(Guid dlSourceSystemId, DateTime addTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void AddDepartmentIndicatorValueByMRMS(Guid dlSourceSystemId, DateTime addTime)
+        {
+            using (ImsDbContext context = new ImsDbContext())
+            {
+                //1 由项目来源部门找出管属项目
+
+                var indicatorItems = context.Indicators.Where(i => i.DataSourceSystemID != null && i.DataSourceSystemID == dlSourceSystemId).OrderBy(i => i.Name).ToList();
+                foreach (var indicator in indicatorItems)
+                {
+                    //2 管属项目找到对应的科室类别项目映射表，找到对应科室类别
+                    var departmentCategoryIndicators = indicator.DepartmentCategoryIndicatorMaps.ToList();
+                    //列举出对应的科室类别，再由此找到每个科室
+                    foreach (var categoryIndicator in departmentCategoryIndicators)
+                    {
+                        //3 通过科室类别找到管辖的科室，逐一与项目组合，添加到科室项目值表
+                        var departmentCategory = categoryIndicator?.DepartmentCategory;
+                        if (departmentCategory == null)
+                        {
+                            continue;
+                        }
+                        var departments = departmentCategory?.Departments;
+                        //列出该科室负责的填报项目，再逐步添加到值表中。
+
+                        foreach (var department in departments)
+                        {
+                            //需先查重，如果已经该项目已存在于数据库，不添加
+                            //检查下一项
+                            var query = context.DepartmentIndicatorValues.Where(d => d.DepartmentID == department.DepartmentID && d.IndicatorID == indicator.IndicatorID
+                            && d.Time.Year == addTime.Year && d.Time.Month == addTime.Month).FirstOrDefault();
+                            if (query != null)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                //不存在该项目，需添加到数据库
+                                IMS.Models.DepartmentIndicatorValue item = new IMS.Models.DepartmentIndicatorValue();
+                                item.DepartmentID = department.DepartmentID;
+                                item.IndicatorID = indicator.IndicatorID;
+                                item.Time = addTime;
+                                item.ID = System.Guid.NewGuid();
+                                //从病案管理系统中获取值
+                                //var bagl = new ImsAutoLib.Bagl.Bagl();
+                                //var valueReturned = bagl.GetIndicatorValue(item.DepartmentID.Value, item.IndicatorID.Value, item.Time);
+                                //item.Value = valueReturned;
+                                context.DepartmentIndicatorValues.Add(item);
+                                context.SaveChanges();
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
         private void dlDepatmentBind()
         {
-            dlDepartment.DataSource = new GetBaseData().GetDepartmentIndicatorDic();
-            dlDepartment.DataTextField = "Value";
-            dlDepartment.DataValueField = "Key";
-            dlDepartment.DataBind();
+            dlSourceSystem.DataSource = new GetBaseData().GetDataSourceSystemDic();
+            dlSourceSystem.DataTextField = "Value";
+            dlSourceSystem.DataValueField = "Key";
+            dlSourceSystem.DataBind();
         }
 
 
@@ -112,18 +134,19 @@ namespace IMS.Monitor
         //     int startRowIndex
         //     out int totalRowCount
         //     string sortByExpression
-        public IQueryable<IMS.Models.DepartmentIndicatorValue> lvIndicatorValue_GetData([Control] Guid? dlDepartment, [Control] DateTime? txtDate, [Control] string Message)
+        public IQueryable<IMS.Models.DepartmentIndicatorValue> lvIndicatorValue_GetData([Control] Guid? dlSourceSystem, [Control] DateTime? txtDate, [Control] string Message)
         {
             IQueryable<IMS.Models.DepartmentIndicatorValue> query = null;
-            if (dlDepartment == null || txtDate == null)
+            if (dlSourceSystem == null || txtDate == null)
             {
                 return query;
             }
 
             ImsDbContext context = new ImsDbContext();
-            //找到该项目管辖的项目
+            //找到该来源系统管辖的项目
             query = context.DepartmentIndicatorValues.Include(i => i.Indicator).Include(i => i.Department)
-                .Where(d => d.Indicator.DepartmentID == dlDepartment && d.Time == txtDate).OrderBy(i => i.Department.DepartmentName);
+                .Where(d => d.Indicator.DataSourceSystemID == dlSourceSystem && d.Time == txtDate)
+                .OrderBy(i => i.Department.DepartmentName).ThenBy(i => i.Indicator.Name);
 
             return query;
         }
@@ -185,17 +208,17 @@ namespace IMS.Monitor
         //     int startRowIndex
         //     out int totalRowCount
         //     string sortByExpression
-        public IQueryable<IMS.Models.Indicator> lvIndicatorItem_GetData([Control] Guid? dlDepartment)
+        public IQueryable<IMS.Models.Indicator> lvIndicatorItem_GetData([Control] Guid? dlSourceSystem, [Control] DateTime? txtDate)
         {
             IQueryable<IMS.Models.Indicator> query = null;
 
-            if (dlDepartment != null)
+            if (dlSourceSystem != null)
             {
                 ImsDbContext context = new ImsDbContext();
 
                 //需找到该Department
-                //var department = context.Departments.Find(dlDepartment);
-                query = context.Indicators.Where(i => i.DepartmentID != null && i.DepartmentID == dlDepartment).OrderBy(i => i.Name);
+                //var department = context.Departments.Find(dlSourceSystem);
+                query = context.Indicators.Where(i => i.DataSourceSystemID != null && i.DataSourceSystemID == dlSourceSystem).OrderBy(i => i.Name);
 
             }
             return query;

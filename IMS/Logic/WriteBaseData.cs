@@ -56,7 +56,7 @@ namespace IMS.Logic
             using (ImsDbContext context = new ImsDbContext())
             {
                 //先用ID查重
-                
+
                 if (department.DepartmentID != null)
                 {
                     item = context.Departments.Find(department.DepartmentID);
@@ -81,6 +81,70 @@ namespace IMS.Logic
             }
             return item;
         }
+        internal DataSourceSystem AddDataSourceSystem(DataSourceSystem dataSourceSystem)
+        {
+            DataSourceSystem item = null;
+            if (dataSourceSystem != null && dataSourceSystem.Name == null)
+            {
+                return item;
+            }
+            using (ImsDbContext context = new ImsDbContext())
+            {
+                //先用ID查重
+                if (dataSourceSystem.ID != null)
+                {
+                    item = context.DataSourceSystems.Find(dataSourceSystem.ID);
+                }
+                //或用Name查重
+                else
+                {
+                    if (dataSourceSystem.Name != null)
+                    {
+                        item = context.DataSourceSystems.Where(d => d.Name == dataSourceSystem.Name).FirstOrDefault();
+
+                    }
+                }
+                if (item == null)
+                {
+                    //如果为null，说明数据库不存在该项，添加
+                    item = dataSourceSystem;
+                    context.DataSourceSystems.Add(item);
+                    context.SaveChanges();
+                }
+            }
+            return item;
+        }
+
+        public IndicatorAlgorithm AddIndicatorAlgorithm(IndicatorAlgorithm indicatorAlgorithm)
+        {
+            IndicatorAlgorithm item = null;
+            if (indicatorAlgorithm == null)
+            {
+                return item;
+            }
+            using (ImsDbContext context = new ImsDbContext())
+            {
+                //先用ID查重
+                if (indicatorAlgorithm.ID != null)
+                {
+                    item = context.IndicatorAlgorithms.Find(indicatorAlgorithm.ID);
+                }
+                //再用ResultOperation查找，如果能找到，则也不加入
+                if (item == null && indicatorAlgorithm.ResultOperationID != null)
+                {
+                    item = context.IndicatorAlgorithms.Where(i => i.ResultOperationID == indicatorAlgorithm.ResultOperationID).FirstOrDefault();
+                }
+                if (item == null)
+                {
+                    //如果仍然没有，则可以添加到数据库
+                    item = indicatorAlgorithm;
+                    context.IndicatorAlgorithms.Add(item);
+                    context.SaveChanges();
+                }
+            }
+            return item;
+        }
+
         /// <summary>
         /// 利用科室名称检测是否在科室表中.
         /// </summary>
@@ -98,6 +162,9 @@ namespace IMS.Logic
             }
             return item;
         }
+
+
+
         public DepartmentCategory FindDepartmentCategoryByName(string name)
         {
             DepartmentCategory item = null;
@@ -137,14 +204,8 @@ namespace IMS.Logic
                     var dataSystem = context.DataSourceSystems.Where(d => d.Name == indicatorItem.DataSystem).FirstOrDefault();
                     if (dataSystem == null)
                     {
-                        //需添加该数据源名称,
-                        //测试用，之后需删除
-                        DataSourceSystem newDataSystem = new DataSourceSystem();
-                        newDataSystem.ID = System.Guid.NewGuid();
-                        newDataSystem.Name = indicatorItem.DataSystem;
-                        context.DataSourceSystems.Add(newDataSystem);
-                        context.SaveChanges();
-                        dataSystem = newDataSystem;
+                        //若不存在，直接返回,
+                        return;
                     }
                     //需获取DataSystem的ID值
                     item.DataSourceSystemID = dataSystem.ID;

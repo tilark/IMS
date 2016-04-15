@@ -18,9 +18,11 @@ namespace IMS
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             InitialItemData initialItemData = new InitialItemData();
             initialItemData.InitialDepartmentCategory();
+            initialItemData.InitialDataSourceSystem();
             initialItemData.InitialDepartment();
             initialItemData.InitialIndicator();
             initialItemData.InitialDepartmentCategoryIndicatorMap();
+            initialItemData.InitialIndicatorAlgorithm();
         }
     }
 }

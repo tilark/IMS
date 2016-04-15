@@ -52,6 +52,7 @@ namespace IMS.Models
         public DbSet<DepartmentCategoryIndicatorMap> DepartmentCategoryIndicatorMaps { get; set; }
         public DbSet<DepartmentIndicatorStandardValue> DepartmentIndicatorStandardValues { get; set; }
         public DbSet<DataSourceSystem> DataSourceSystems { get; set; }
+        public DbSet<IndicatorAlgorithm> IndicatorAlgorithms { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -86,12 +87,12 @@ namespace IMS.Models
         /// Gets or sets the department identifier.
         /// </summary>
         /// <value>The department identifier.</value>
-        public Guid? DepartmentID { get; set; }
+        public Guid DepartmentID { get; set; }
         /// <summary>
         /// Gets or sets the monitor item identifier.
         /// </summary>
         /// <value>The monitor item identifier.</value>
-        public Guid? IndicatorID { get; set; }
+        public Guid IndicatorID { get; set; }
         /// <summary>
         /// Gets or sets the Indicator value.
         /// </summary>
@@ -142,7 +143,7 @@ namespace IMS.Models
         [Display(Name = "科室编号")]
         [ScaffoldColumn(false)]
         public Guid DepartmentID { get; set; }
-        public Guid? DepartmentCategoryID { get; set; }
+        public Guid DepartmentCategoryID { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the department.
@@ -222,7 +223,6 @@ namespace IMS.Models
         [ForeignKey("DataSourceSystemID")]
 
         public virtual DataSourceSystem DataSourceSystem { get; set; }
-
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
 
@@ -285,8 +285,8 @@ namespace IMS.Models
     {
         [Key]
         public Guid ID { get; set; }
-        public Guid? DepartmentCategoryID { get; set; }
-        public Guid? IndicatorID { get; set; }
+        public Guid DepartmentCategoryID { get; set; }
+        public Guid IndicatorID { get; set; }
         [ForeignKey("DepartmentCategoryID")]
 
         public virtual DepartmentCategory DepartmentCategory { get; set; }
@@ -304,8 +304,8 @@ namespace IMS.Models
     {
         [Key]
         public Guid ID { get; set; }
-        public Guid? DepartmentID { get; set; }
-        public Guid? IndicatorID { get; set; }
+        public Guid DepartmentID { get; set; }
+        public Guid IndicatorID { get; set; }
         public virtual Department Department { get; set; }
         public virtual Indicator Indicator { get; set; }
 
@@ -317,5 +317,22 @@ namespace IMS.Models
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
 
+    }
+    /// <summary>
+    /// IndicatorAlgorithm.包含结果项目，第一操作项目，第二操作项目，操作符，备注
+    /// </summary>
+    public class IndicatorAlgorithm
+    {
+        [Key]
+        public Guid ID { get; set; }
+        public Guid? ResultOperationID { get; set; }
+        public Guid? FirstOperationID { get; set; }
+        public Guid? SecondOperationID { get; set; }
+        [Display(Name = "操作符")]
+
+        public string Operation { get; set; }
+        [Display(Name = "备注")]
+
+        public string Remarks { get; set; }
     }
 }

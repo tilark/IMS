@@ -54,6 +54,65 @@ namespace IMS.Logic
                 }
             }
         }
+
+        internal void InitialIndicatorAlgorithm()
+        {
+            var fileName = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager
+               .AppSettings["IndicatorAlgorithm"]);
+            ReadFromExcel readFromExcel = new ReadFromExcel();
+            //按Row获取当前行的所有数据
+            int rowCount = readFromExcel.GetRowCount(fileName);
+            for (int i = 2; i <= rowCount; i++)
+            {
+                var columnData = readFromExcel.ReadRowFromExcel((uint)i, fileName);
+                //数据必须大于等5才是正确的
+                //第1列为结果项目的Guid,
+                //第2列为第一个项目的Guid
+                //第3列为第二个项目的Guid
+                //第4列为操作符
+                //第5列为备注
+                if (columnData.Count >= 5)
+                {
+                    //var firstData = columnData.First();
+                    WriteBaseData writeBaseData = new WriteBaseData();
+                    IndicatorAlgorithm indicatorAlgorithm = new IndicatorAlgorithm();
+                    indicatorAlgorithm.ResultOperationID = Guid.Parse(columnData.ElementAt(0));
+                    indicatorAlgorithm.FirstOperationID = Guid.Parse(columnData.ElementAt(1));
+                    indicatorAlgorithm.SecondOperationID = Guid.Parse(columnData.ElementAt(2));
+                    indicatorAlgorithm.Operation = columnData.ElementAt(3);
+                    indicatorAlgorithm.Remarks = columnData.ElementAt(4);
+                    indicatorAlgorithm.ID = System.Guid.NewGuid();
+                    writeBaseData.AddIndicatorAlgorithm(indicatorAlgorithm);
+
+                }
+            }
+        }
+
+        internal void InitialDataSourceSystem()
+        {
+            var fileName = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager
+                .AppSettings["DataSourceSystem"]);
+            ReadFromExcel readFromExcel = new ReadFromExcel();
+            //按Row获取当前行的所有数据
+            int rowCount = readFromExcel.GetRowCount(fileName);
+            for (int i = 2; i <= rowCount; i++)
+            {
+                var columnData = readFromExcel.ReadRowFromExcel((uint)i, fileName);
+                //获取第一个数为来源系统名称
+                //数据必须大于等2才是正确的
+                if (columnData.Count >= 2)
+                {
+                    WriteBaseData writeBaseData = new WriteBaseData();
+                    //第二列为来源系统Guid
+                    DataSourceSystem dataSourceSystem = new DataSourceSystem();
+                    dataSourceSystem.Name = columnData.ElementAt(0);
+                    dataSourceSystem.ID = Guid.Parse(columnData.ElementAt(1));
+                    //写入数据库
+                    dataSourceSystem = writeBaseData.AddDataSourceSystem(dataSourceSystem);
+                }
+            }
+        }
+
         /// <summary>
         /// 初始化科室.
         /// </summary>
@@ -77,7 +136,7 @@ namespace IMS.Logic
                     //第二列为科室类别
                     var name = columnData.ElementAt(1);
                     var departmentCategory = writeBaseData.FindDepartmentCategoryByName(name);
-                    if(departmentCategory == null)
+                    if (departmentCategory == null)
                     {
                         return;
                     }

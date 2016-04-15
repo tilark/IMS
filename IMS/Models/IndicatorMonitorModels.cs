@@ -97,16 +97,15 @@ namespace IMS.Models
         /// </summary>
         /// <value>The value.</value>
         [Display(Name = "项目值")]
-        [MaxLength(30)]
 
-        public string Value { get; set; }
+        public decimal? Value { get; set; }
         /// <summary>
         /// Gets or sets the time.
         /// </summary>
         /// <value>The time.</value>
         [Display(Name = "监测时间")]
 
-        public DateTime? Time { get; set; }
+        public DateTime Time { get; set; }
         /// <summary>
         /// Gets or sets the department.
         /// </summary>
@@ -314,8 +313,7 @@ namespace IMS.Models
         [MaxLength(30)]
         public string CompareMethod { get; set; }
         [Display(Name = "标准值")]
-        [MaxLength(100)]
-        public string StandardValue { get; set; }
+        public decimal? StandardValue { get; set; }
         [Timestamp]
         public Byte[] TimeStamp { get; set; }
 

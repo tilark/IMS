@@ -15,6 +15,8 @@ namespace IMS.Logic
         public string Department { get; set; }
         public string Remarks { get; set; }
         public string DutyDepartment { get; set; }
+        public Guid GuidId { get; set; }
+
     }
     public class InitialItemData
     {
@@ -22,6 +24,76 @@ namespace IMS.Logic
         public InitialItemData()
         {
         }
+        /// <summary>
+        /// 初始化科室类别.
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        internal void InitialDepartmentCategory()
+        {
+            var fileName = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager
+                .AppSettings["DepartmentCategory"]);
+            //第一列为类别的名称，第二列开始为Guid
+            ReadFromExcel readFromExcel = new ReadFromExcel();
+            //按Row获取当前行的所有数据
+            int rowCount = readFromExcel.GetRowCount(fileName);
+            for (int i = 2; i <= rowCount; i++)
+            {
+                var columnData = readFromExcel.ReadRowFromExcel((uint)i, fileName);
+                //获取第一个数为类别
+                //第二列为类别的Guid,数据必须大于等2才是正确的
+                if (columnData.Count >= 2)
+                {
+                    //var firstData = columnData.First();
+                    WriteBaseData writeBaseData = new WriteBaseData();
+                    DepartmentCategory departmentCategory = new DepartmentCategory();
+                    departmentCategory.Name = columnData.ElementAt(0);
+                    departmentCategory.DepartmentCategoryID = Guid.Parse(columnData.ElementAt(1));
+                    //写入数据库
+                    departmentCategory = writeBaseData.AddDepartmentCategory(departmentCategory);
+
+                }
+            }
+        }
+        /// <summary>
+        /// 初始化科室.
+        /// </summary>
+        public void InitialDepartment()
+        {
+            var fileName = HttpContext.Current.Server.MapPath(System.Configuration.ConfigurationManager
+                .AppSettings["Department"]);
+            //第一列为科室名称，第二列所属科室类别，第三列为科室的Guid
+            ReadFromExcel readFromExcel = new ReadFromExcel();
+            //按Row获取当前行的所有数据
+            int rowCount = readFromExcel.GetRowCount(fileName);
+            for (int i = 2; i <= rowCount; i++)
+            {
+                var columnData = readFromExcel.ReadRowFromExcel((uint)i, fileName);
+                //获取第一个数为科室名称
+                //数据必须大于等3才是正确的
+                if (columnData.Count >= 3)
+                {
+                    WriteBaseData writeBaseData = new WriteBaseData();
+                    //DepartmentCategory departmentCategory = new DepartmentCategory();
+                    //第二列为科室类别
+                    var name = columnData.ElementAt(1);
+                    var departmentCategory = writeBaseData.FindDepartmentCategoryByName(name);
+                    if(departmentCategory == null)
+                    {
+                        return;
+                    }
+                    Department department = new Department();
+                    //第一列为科室名称
+                    department.DepartmentName = columnData.ElementAt(0);
+                    //第三列为科室Guid
+                    department.DepartmentID = Guid.Parse(columnData.ElementAt(2));
+                    department.DepartmentCategoryID = departmentCategory.DepartmentCategoryID;
+                    //添加department
+                    writeBaseData.AddDepartment(department);
+
+                }
+            }
+        }
+
         /// <summary>
         /// 初始化科室与科室类别
         /// </summary>
@@ -34,11 +106,11 @@ namespace IMS.Logic
             ReadFromExcel readFromExcel = new ReadFromExcel();
             //按Row获取当前行的所有数据
             int rowCount = readFromExcel.GetRowCount(departmentCategoryFile);
-            for (int i = 1; i <= rowCount; i++)
+            for (int i = 2; i <= rowCount; i++)
             {
                 var columnData = readFromExcel.ReadRowFromExcel((uint)i, departmentCategoryFile);
                 //获取第一个数为类别
-                if (columnData.Count > 0)
+                if (columnData.Count >= 2)
                 {
                     var firstData = columnData.First();
 
@@ -79,7 +151,7 @@ namespace IMS.Logic
             {
                 var columnData = readFromExcel.ReadRowFromExcel((uint)i, indicatorFile);
                 //将该列按照IndicatorItem录入，再插入到数据库
-                if (columnData.Count > 0)
+                if (columnData.Count >= 8)
                 {
                     IndicatorItem indicatorItem = new IndicatorItem();
                     //按照顺序填充
@@ -90,7 +162,7 @@ namespace IMS.Logic
                     indicatorItem.Department = columnData.ElementAt(4);
                     indicatorItem.Remarks = columnData.ElementAt(5);
                     indicatorItem.DutyDepartment = columnData.ElementAt(6);
-
+                    indicatorItem.GuidId = Guid.Parse(columnData.ElementAt(7));
                     //写入数据库
                     WriteBaseData writeBaseData = new WriteBaseData();
                     writeBaseData.AddIndicator(indicatorItem);
@@ -109,15 +181,15 @@ namespace IMS.Logic
             {
                 var columnData = readFromExcel.ReadRowFromExcel((uint)i, fileName);
                 //获取第一个数为科室类别
-                if (columnData.Count > 0)
+                if (columnData.Count >= 2)
                 {
                     var firstData = columnData.First();
 
                     WriteBaseData writeBaseData = new WriteBaseData();
                     DepartmentCategory departmentCategory = new DepartmentCategory();
-                    //将第一个数当作类别，插入科室类别表中
+                    //将第一个数当作类别，找到科室类别
                     departmentCategory.Name = firstData;
-                    departmentCategory = writeBaseData.AddDepartmentCategory(departmentCategory);
+                    departmentCategory = writeBaseData.FindDepartmentCategoryByName(departmentCategory.Name);
                     if (departmentCategory == null)
                     {
                         return;
@@ -129,12 +201,12 @@ namespace IMS.Logic
                         //依次将第二个列之后的项目插入到科室类别项目表中
                         //如果该项目不在数据库，继续下一个数据
                         var indicator = writeBaseData.FindIndicatorByName(data);
-                        if(indicator == null)
+                        if (indicator == null)
                         {
                             continue;
                         }
                         //将Indicator添加进去
-                        
+
                         DepartmentCategoryIndicatorMap item = new DepartmentCategoryIndicatorMap();
                         item.DepartmentCategoryID = departmentCategory.DepartmentCategoryID;
                         item.IndicatorID = indicator.IndicatorID;

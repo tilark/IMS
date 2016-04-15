@@ -51,6 +51,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\program files (x86)\Open XML SDK\V2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="ImsAutoLib">
+      <HintPath>..\..\..\Program Files (x86)\ImsAutoLib\ImsAutoLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -176,6 +179,7 @@
     <Content Include="Account\ResetPasswordConfirmation.aspx" />
     <Content Include="Account\TwoFactorAuthenticationSignIn.aspx" />
     <Content Include="Account\VerifyPhoneNumber.aspx" />
+    <Content Include="Admin\AdminDepartmentIndicatorValue.aspx" />
     <Content Include="Admin\Department.aspx" />
     <Content Include="Admin\DepartmentCategory.aspx" />
     <Content Include="Admin\DepartmentCategoryIndicatorMap.aspx" />
@@ -202,6 +206,9 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Monitor\AddIndicatorValue.aspx" />
+    <Content Include="Monitor\AddIndicatorValueAuto.aspx" />
+    <Content Include="Monitor\DepartmentIndicatorValue.aspx" />
     <Content Include="Monitor\MonitorList.aspx" />
     <Content Include="Monitor\Web.config" />
     <Content Include="Reporter\Web.config" />
@@ -368,6 +375,13 @@
     <Compile Include="Account\VerifyPhoneNumber.aspx.designer.cs">
       <DependentUpon>VerifyPhoneNumber.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\AdminDepartmentIndicatorValue.aspx.cs">
+      <DependentUpon>AdminDepartmentIndicatorValue.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\AdminDepartmentIndicatorValue.aspx.designer.cs">
+      <DependentUpon>AdminDepartmentIndicatorValue.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\Department.aspx.cs">
       <DependentUpon>Department.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -464,12 +478,41 @@
     <Compile Include="ImsDbContextMigrations\201604130223235_AddRequireForName.Designer.cs">
       <DependentUpon>201604130223235_AddRequireForName.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImsDbContextMigrations\201604140119010_DateTimeTimeRequired.cs" />
+    <Compile Include="ImsDbContextMigrations\201604140119010_DateTimeTimeRequired.Designer.cs">
+      <DependentUpon>201604140119010_DateTimeTimeRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImsDbContextMigrations\201604150858152_DecimalToValue.cs" />
+    <Compile Include="ImsDbContextMigrations\201604150858152_DecimalToValue.Designer.cs">
+      <DependentUpon>201604150858152_DecimalToValue.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Logic\GetBaseData.cs" />
     <Compile Include="Logic\InitialItemData.cs" />
     <Compile Include="Logic\WriteBaseData.cs" />
     <Compile Include="Models\IndicatorMonitorModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Monitor\AddIndicatorValue.aspx.cs">
+      <DependentUpon>AddIndicatorValue.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Monitor\AddIndicatorValue.aspx.designer.cs">
+      <DependentUpon>AddIndicatorValue.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Monitor\AddIndicatorValueAuto.aspx.cs">
+      <DependentUpon>AddIndicatorValueAuto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Monitor\AddIndicatorValueAuto.aspx.designer.cs">
+      <DependentUpon>AddIndicatorValueAuto.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Monitor\DepartmentIndicatorValue.aspx.cs">
+      <DependentUpon>DepartmentIndicatorValue.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Monitor\DepartmentIndicatorValue.aspx.designer.cs">
+      <DependentUpon>DepartmentIndicatorValue.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Monitor\MonitorList.aspx.cs">
       <DependentUpon>MonitorList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -535,6 +578,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604130223235_AddRequireForName.resx">
       <DependentUpon>201604130223235_AddRequireForName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604140119010_DateTimeTimeRequired.resx">
+      <DependentUpon>201604140119010_DateTimeTimeRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604150858152_DecimalToValue.resx">
+      <DependentUpon>201604150858152_DecimalToValue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

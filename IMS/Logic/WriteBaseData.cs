@@ -15,31 +15,30 @@ namespace IMS.Logic
 
             //查重，如果数据库中已存在，返回该项
             DepartmentCategory item = null;
-            if (departmentCategory.Name == null)
+            if (departmentCategory != null && departmentCategory.Name == null)
             {
                 return item;
             }
             using (ImsDbContext context = new ImsDbContext())
             {
                 //先用ID查重
-                if (departmentCategory.Name != null)
+                if (departmentCategory.DepartmentCategoryID != null)
                 {
-                    item = context.DepartmentCategories.Where(d => d.Name == departmentCategory.Name).FirstOrDefault();
-
+                    item = context.DepartmentCategories.Find(departmentCategory.DepartmentCategoryID);
                 }
                 //或用Name查重
                 else
                 {
-                    if (departmentCategory.DepartmentCategoryID != null)
+                    if (departmentCategory.Name != null)
                     {
-                        item = context.DepartmentCategories.Find(departmentCategory.DepartmentCategoryID);
+                        item = context.DepartmentCategories.Where(d => d.Name == departmentCategory.Name).FirstOrDefault();
+
                     }
                 }
                 if (item == null)
                 {
                     //如果为null，说明数据库不存在该项，添加
                     item = departmentCategory;
-                    item.DepartmentCategoryID = System.Guid.NewGuid();
 
                     context.DepartmentCategories.Add(item);
                     context.SaveChanges();
@@ -50,31 +49,32 @@ namespace IMS.Logic
         public Department AddDepartment(Department department)
         {
             Department item = null;
-            if (department.DepartmentName == null)
+            if (department == null || department.DepartmentName == null)
             {
                 return item;
             }
             using (ImsDbContext context = new ImsDbContext())
             {
                 //先用ID查重
-                if (department.DepartmentName != null)
+                
+                if (department.DepartmentID != null)
                 {
-                    item = context.Departments.Where(d => d.DepartmentName == department.DepartmentName).FirstOrDefault();
+                    item = context.Departments.Find(department.DepartmentID);
+
                 }
                 //或用Name查重
                 else
                 {
-                    if (department.DepartmentID != null)
+                    if (department.DepartmentName != null)
                     {
-                        item = context.Departments.Find(department.DepartmentCategoryID);
-
+                        item = context.Departments.Where(d => d.DepartmentName == department.DepartmentName).FirstOrDefault();
                     }
                 }
                 if (item == null)
                 {
                     //如果为null，说明数据库不存在该项，添加
                     item = department;
-                    item.DepartmentID = System.Guid.NewGuid();
+                    //item.DepartmentID = System.Guid.NewGuid();
                     context.Departments.Add(item);
                     context.SaveChanges();
                 }
@@ -116,15 +116,15 @@ namespace IMS.Logic
         /// <param name="indicatorItem">代码中的对应映射类.</param>
         public void AddIndicator(IndicatorItem indicatorItem)
         {
-            if (indicatorItem.Name == null)
+            if (indicatorItem == null)
             {
                 return;
             }
             using (ImsDbContext context = new ImsDbContext())
             {
-                //先通过Name查重，如果存在，不添加
+                //先通过Id查重，如果存在，不添加
                 Indicator item = new Indicator();
-                var query = context.Indicators.Where(i => i.Name == indicatorItem.Name).FirstOrDefault();
+                var query = context.Indicators.Where(i => i.IndicatorID == indicatorItem.GuidId).FirstOrDefault();
                 if (query != null)
                 {
                     //已存在，返回
@@ -137,7 +137,8 @@ namespace IMS.Logic
                     var dataSystem = context.DataSourceSystems.Where(d => d.Name == indicatorItem.DataSystem).FirstOrDefault();
                     if (dataSystem == null)
                     {
-                        //需添加该数据源名称
+                        //需添加该数据源名称,
+                        //测试用，之后需删除
                         DataSourceSystem newDataSystem = new DataSourceSystem();
                         newDataSystem.ID = System.Guid.NewGuid();
                         newDataSystem.Name = indicatorItem.DataSystem;
@@ -168,7 +169,7 @@ namespace IMS.Logic
                 item.DutyDepartment = indicatorItem?.DutyDepartment;
                 item.Remarks = indicatorItem?.Remarks;
                 //添加到数据库
-                item.IndicatorID = System.Guid.NewGuid();
+                item.IndicatorID = indicatorItem.GuidId;
                 context.Indicators.Add(item);
                 context.SaveChanges();
             }

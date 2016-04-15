@@ -17,7 +17,8 @@ namespace IMS
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             InitialItemData initialItemData = new InitialItemData();
-            initialItemData.InitialDepartmentAndCategory();
+            initialItemData.InitialDepartmentCategory();
+            initialItemData.InitialDepartment();
             initialItemData.InitialIndicator();
             initialItemData.InitialDepartmentCategoryIndicatorMap();
         }

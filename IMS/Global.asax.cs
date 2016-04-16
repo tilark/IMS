@@ -23,6 +23,10 @@ namespace IMS
             initialItemData.InitialIndicator();
             initialItemData.InitialDepartmentCategoryIndicatorMap();
             initialItemData.InitialIndicatorAlgorithm();
+
+            RoleActions roleAction = new RoleActions();
+            roleAction.InitialRoleName();
+            roleAction.CreateAdmin();
         }
     }
 }

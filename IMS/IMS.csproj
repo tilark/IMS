@@ -185,6 +185,10 @@
     <Content Include="Admin\DepartmentCategoryIndicatorMap.aspx" />
     <Content Include="Admin\DepartmentIndicatoTest.aspx" />
     <Content Include="Admin\Indicator.aspx" />
+    <Content Include="Admin\ListUsers.aspx" />
+    <Content Include="Admin\ManageUserRoles.aspx" />
+    <Content Include="Admin\ResetAccount.aspx" />
+    <Content Include="Admin\ResetPassword.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
@@ -417,9 +421,41 @@
     <Compile Include="Admin\Indicator.aspx.designer.cs">
       <DependentUpon>Indicator.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\ListUsers.aspx.cs">
+      <DependentUpon>ListUsers.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ListUsers.aspx.designer.cs">
+      <DependentUpon>ListUsers.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ManageUserRoles.aspx.cs">
+      <DependentUpon>ManageUserRoles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ManageUserRoles.aspx.designer.cs">
+      <DependentUpon>ManageUserRoles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ResetAccount.aspx.cs">
+      <DependentUpon>ResetAccount.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ResetAccount.aspx.designer.cs">
+      <DependentUpon>ResetAccount.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ResetPassword.aspx.cs">
+      <DependentUpon>ResetPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ResetPassword.aspx.designer.cs">
+      <DependentUpon>ResetPassword.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.cs" />
     <Compile Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.Designer.cs">
       <DependentUpon>201604111211096_CreateUserDatabase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ApplicationDbContextMigrations\201604160420569_CreateUserDatabase1.cs" />
+    <Compile Include="ApplicationDbContextMigrations\201604160420569_CreateUserDatabase1.Designer.cs">
+      <DependentUpon>201604160420569_CreateUserDatabase1.cs</DependentUpon>
     </Compile>
     <Compile Include="ApplicationDbContextMigrations\Configuration.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -494,10 +530,15 @@
     <Compile Include="ImsDbContextMigrations\201604151508520_ReWriteIndicatorAlgorithm.Designer.cs">
       <DependentUpon>201604151508520_ReWriteIndicatorAlgorithm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImsDbContextMigrations\201604160418375_AddUserEmployeeNo.cs" />
+    <Compile Include="ImsDbContextMigrations\201604160418375_AddUserEmployeeNo.Designer.cs">
+      <DependentUpon>201604160418375_AddUserEmployeeNo.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImsDbContextMigrations\Configuration.cs" />
     <Compile Include="Logic\GetBaseData.cs" />
     <Compile Include="Logic\IndicatorValue.cs" />
     <Compile Include="Logic\InitialItemData.cs" />
+    <Compile Include="Logic\RoleActions.cs" />
     <Compile Include="Logic\WriteBaseData.cs" />
     <Compile Include="Models\IndicatorMonitorModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -567,6 +608,9 @@
     <EmbeddedResource Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.resx">
       <DependentUpon>201604111211096_CreateUserDatabase.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ApplicationDbContextMigrations\201604160420569_CreateUserDatabase1.resx">
+      <DependentUpon>201604160420569_CreateUserDatabase1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604110220498_InitialDataBase.resx">
       <DependentUpon>201604110220498_InitialDataBase.cs</DependentUpon>
     </EmbeddedResource>
@@ -599,6 +643,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604151508520_ReWriteIndicatorAlgorithm.resx">
       <DependentUpon>201604151508520_ReWriteIndicatorAlgorithm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImsDbContextMigrations\201604160418375_AddUserEmployeeNo.resx">
+      <DependentUpon>201604160418375_AddUserEmployeeNo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -47,34 +47,7 @@ namespace IMS.Logic
             return listData;
 
         }
-        public Dictionary<string, string> GetMonitorItemDic()
-        {
-            Dictionary<string, string> listData = new Dictionary<string, string>();
-            using (ImsDbContext context = new ImsDbContext())
-            {
-                listData.Add(" ", "-全选-");
-
-                foreach (var query in context.Indicators)
-                {
-                    listData.Add(query.IndicatorID.ToString(), query.Name);
-                }
-            }
-            return listData;
-        }
-        public Dictionary<string, string> GetDepartmentTypeDic()
-        {
-            Dictionary<string, string> listData = new Dictionary<string, string>();
-            using (ImsDbContext context = new ImsDbContext())
-            {
-                listData.Add(" ", "-全选-");
-
-                foreach (var query in context.DepartmentCategories)
-                {
-                    listData.Add(query.DepartmentCategoryID.ToString(), query.Name);
-                }
-            }
-            return listData;
-        }
+       
 
         public Dictionary<Guid, string> GetDataSourceSystemDic()
         {

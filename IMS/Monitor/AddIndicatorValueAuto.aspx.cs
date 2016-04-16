@@ -18,7 +18,7 @@ namespace IMS.Monitor
         {
             if (!IsPostBack)
             {
-                dlDepatmentBind();
+                dlSourceSystemBind();
             }
         }
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -41,11 +41,11 @@ namespace IMS.Monitor
                 {
                     AddDepartmentIndicatorValueByMRMS(dlSourceSystemId, addTime);
                 }
-                else if(sourceSystemName == "计算")
+                else if (sourceSystemName == "计算")
                 {
                     AddDepartmentIndicatorValueByCalculation(dlSourceSystemId, addTime);
                 }
-                
+
                 //需更新该页面 通过改变Message的值，会调用lvIndicatorValue_GetData
                 //添加时间过长时，通过UpdateProcessing显示模态提示框，并能够显示进度条，添加成功后，关闭模态框
                 Message.Text = "添加项目成功！";
@@ -54,14 +54,84 @@ namespace IMS.Monitor
             {
                 Message.Text = ex.Message;
             }
-
-
-
         }
 
         private void AddDepartmentIndicatorValueByCalculation(Guid dlSourceSystemId, DateTime addTime)
         {
-            throw new NotImplementedException();
+            using (ImsDbContext context = new ImsDbContext())
+            {
+                //1 由项目来源部门找出管属项目
+
+                var indicatorItems = context.Indicators.Where(i => i.DataSourceSystemID != null && i.DataSourceSystemID == dlSourceSystemId).OrderBy(i => i.Name).ToList();
+                foreach (var indicator in indicatorItems)
+                {
+                    //2 管属项目找到对应的科室类别项目映射表，找到对应科室类别
+                    var departmentCategoryIndicators = indicator.DepartmentCategoryIndicatorMaps.ToList();
+                    //列举出对应的科室类别，再由此找到每个科室
+                    foreach (var categoryIndicator in departmentCategoryIndicators)
+                    {
+                        //3 通过科室类别找到管辖的科室，逐一与项目组合，添加到科室项目值表
+                        var departmentCategory = categoryIndicator.DepartmentCategory;
+                        if (departmentCategory == null)
+                        {
+                            continue;
+                        }
+                        var departments = departmentCategory.Departments;
+                        //列出该科室负责的填报项目，再逐步添加到值表中。
+
+                        foreach (var department in departments)
+                        {
+                            //需先查重，如果已经该项目已存在于数据库，不添加
+                            //检查下一项
+                            var query = context.DepartmentIndicatorValues.Where(d => d.DepartmentID == department.DepartmentID && d.IndicatorID == indicator.IndicatorID
+                            && d.Time.Year == addTime.Year && d.Time.Month == addTime.Month).FirstOrDefault();
+                            if (query != null)
+                            {
+                                //需计算出该结果值
+                                //相当于一个Update
+                                IndicatorValue indicatorValue = new IndicatorValue();
+                                var valueReturned = indicatorValue.GetDepartmentIndicatorValueByCalculate(query.DepartmentID, query.IndicatorID, addTime);
+                                query.Value = valueReturned;
+                                #region Client win context.SaveChanges();
+                                bool saveFailed;
+                                do
+                                {
+                                    saveFailed = false;
+                                    try
+                                    {
+                                        context.SaveChanges();
+                                    }
+                                    catch (DbUpdateConcurrencyException ex)
+                                    {
+                                        saveFailed = true;
+
+                                        // Update original values from the database 
+                                        var entry = ex.Entries.Single();
+                                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                                    }
+
+                                } while (saveFailed);
+                                #endregion
+                            }
+                            else
+                            {
+                                //不存在该项目，需添加到数据库
+                                IMS.Models.DepartmentIndicatorValue item = new IMS.Models.DepartmentIndicatorValue();
+                                item.DepartmentID = department.DepartmentID;
+                                item.IndicatorID = indicator.IndicatorID;
+                                item.Time = addTime;
+                                item.ID = System.Guid.NewGuid();
+                                //从计算获取该值
+                                IndicatorValue indicatorValue = new IndicatorValue();
+                                var valueReturned = indicatorValue.GetDepartmentIndicatorValueByCalculate(item.DepartmentID, item.IndicatorID, addTime);
+                                item.Value = valueReturned;
+                                context.DepartmentIndicatorValues.Add(item);
+                                context.SaveChanges();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void AddDepartmentIndicatorValueByMRMS(Guid dlSourceSystemId, DateTime addTime)
@@ -79,12 +149,12 @@ namespace IMS.Monitor
                     foreach (var categoryIndicator in departmentCategoryIndicators)
                     {
                         //3 通过科室类别找到管辖的科室，逐一与项目组合，添加到科室项目值表
-                        var departmentCategory = categoryIndicator?.DepartmentCategory;
+                        var departmentCategory = categoryIndicator.DepartmentCategory;
                         if (departmentCategory == null)
                         {
                             continue;
                         }
-                        var departments = departmentCategory?.Departments;
+                        var departments = departmentCategory.Departments;
                         //列出该科室负责的填报项目，再逐步添加到值表中。
 
                         foreach (var department in departments)
@@ -95,7 +165,31 @@ namespace IMS.Monitor
                             && d.Time.Year == addTime.Year && d.Time.Month == addTime.Month).FirstOrDefault();
                             if (query != null)
                             {
-                                continue;
+                                //更改项目的计算值。
+                                //从病案管理系统中获取值
+                                //var bagl = new ImsAutoLib.Bagl.Bagl();
+                                //var valueReturned = bagl.GetIndicatorValue(item.DepartmentID.Value, item.IndicatorID.Value, item.Time);
+                                //item.Value = valueReturned;
+                                #region  Client win context.SaveChanges();
+                                bool saveFailed;
+                                do
+                                {
+                                    saveFailed = false;
+                                    try
+                                    {
+                                        context.SaveChanges();
+                                    }
+                                    catch (DbUpdateConcurrencyException ex)
+                                    {
+                                        saveFailed = true;
+
+                                        // Update original values from the database 
+                                        var entry = ex.Entries.Single();
+                                        entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                                    }
+
+                                } while (saveFailed);
+                                #endregion
                             }
                             else
                             {
@@ -112,14 +206,15 @@ namespace IMS.Monitor
                                 context.DepartmentIndicatorValues.Add(item);
                                 context.SaveChanges();
                             }
-
                         }
                     }
                 }
-            }
-        }
 
-        private void dlDepatmentBind()
+
+            }
+
+        }
+        private void dlSourceSystemBind()
         {
             dlSourceSystem.DataSource = new GetBaseData().GetDataSourceSystemDic();
             dlSourceSystem.DataTextField = "Value";

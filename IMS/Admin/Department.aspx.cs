@@ -27,7 +27,9 @@ namespace IMS.Admin
         {
             IQueryable<IMS.Models.Department> query = null;
             ImsDbContext context = new ImsDbContext();
-            query = context.Departments.OrderBy(o => o.DepartmentName);
+            query = context.Departments.OrderBy(o => o.DepartmentName).Include(i => i.DepartmentCategory)
+                .OrderBy(d => d.DepartmentName).AsQueryable();
+            
             return query;
         }
 
@@ -40,9 +42,14 @@ namespace IMS.Admin
             TextBox txtRemark = new TextBox();
             txtRemark = (TextBox)lvDepartment.InsertItem.FindControl("txtInsertRemark");
             var remark = txtRemark?.Text;
-            if (String.IsNullOrEmpty(name))
+
+            TextBox txtInsertCategory = new TextBox();
+            txtInsertCategory = (TextBox)lvDepartment.InsertItem.FindControl("txtInsertCategory");
+            var categoryName = txtInsertCategory?.Text;
+
+            if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(categoryName))
             {
-                ModelState.AddModelError("", "请输入科室名称!");
+                ModelState.AddModelError("", "请输入科室名称和科室类别!");
                 return;
             }
             TryUpdateModel(item);
@@ -58,8 +65,17 @@ namespace IMS.Admin
                         ModelState.AddModelError("", String.Format("科室 {0} 已存在！", name));
                         return;
                     }
+                    var categoryQuery = context.DepartmentCategories.Where(d => d.Name == categoryName).FirstOrDefault();
+                    if (categoryQuery == null)
+                    {
+                        //输入的科室类别不存在，不能修改
+                        ModelState.AddModelError("", String.Format("科室类别 {0} 不存在！", categoryQuery));
+
+                        return;
+                    }
                     item.DepartmentID = new Guid();
                     item.DepartmentName = name;
+                    item.DepartmentCategoryID = categoryQuery.DepartmentCategoryID;
                     item.Remarks = remark;
                     context.Departments.Add(item);
                     context.SaveChanges();
@@ -77,7 +93,11 @@ namespace IMS.Admin
             TextBox txtEditRemark = new TextBox();
             txtEditRemark = (TextBox)lvDepartment.EditItem.FindControl("txtEditRemark");
             var remark = txtEditRemark?.Text;
-            if (String.IsNullOrEmpty(name))
+
+            TextBox txtEditCategory = new TextBox();
+            txtEditCategory = (TextBox)lvDepartment.EditItem.FindControl("txtEditCategory");
+            var categoryName = txtEditCategory?.Text;
+            if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(categoryName))
             {
                 return;
             }
@@ -103,8 +123,17 @@ namespace IMS.Admin
                         ModelState.AddModelError("", String.Format("科室 {0} 已存在！", name));
                         return;
                     }
+                    var categoryQuery = context.DepartmentCategories.Where(d => d.Name == categoryName).FirstOrDefault();
+                    if(categoryQuery == null)
+                    {
+                        //输入的科室类别不存在，不能修改
+                        ModelState.AddModelError("", String.Format("科室类别 {0} 不存在！", categoryQuery));
+
+                        return;
+                    }
                     item.DepartmentName = name;
                     item.Remarks = remark;
+                    item.DepartmentCategoryID = categoryQuery.DepartmentCategoryID;
                     //database win
                     bool saveFailed;
                     do
@@ -173,5 +202,10 @@ namespace IMS.Admin
                 }
             }
         }
+
+
+
+
+        
     }
 }

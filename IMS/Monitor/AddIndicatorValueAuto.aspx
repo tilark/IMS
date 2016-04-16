@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddIndicatorValueAuto.aspx.cs" Inherits="IMS.Monitor.AddIndicatorValueAuto" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <link rel="stylesheet" href="../Content/bootstrap-datetimepicker.min.css" />
 
@@ -19,7 +20,7 @@
     <div class="form-horizontal">
 
         <div class="form-group">
-            <asp:Label runat="server" AssociatedControlID="dlDepartment" CssClass="col-md-2 control-label">来源系统</asp:Label>
+            <asp:Label runat="server" AssociatedControlID="dlSourceSystem" CssClass="col-md-2 control-label">来源系统</asp:Label>
             <div class="col-md-3">
                 <asp:DropDownList ID="dlSourceSystem" CssClass="form-control" runat="server"></asp:DropDownList>
 
@@ -104,6 +105,7 @@
                                         <th>科室</th>
                                         <th>项目名称</th>
                                         <th>项目值</th>
+                                        <th>单位</th>
                                         <th>项目时间</th>
                                         <th>操作</th>
                                         <th></th>
@@ -113,9 +115,20 @@
                                 <asp:DataPager runat="server" PageSize="15">
                                     <Fields>
                                         <asp:NextPreviousPagerField
-                                            ButtonType="Button"
+                                            ButtonType="Link"
                                             ShowFirstPageButton="True"
-                                            ShowLastPageButton="True" ButtonCssClass="btn btn-info" />
+                                            ShowNextPageButton="false"
+                                            ShowLastPageButton="false" ButtonCssClass="btn btn-info" />
+                                        <asp:NumericPagerField 
+                                            ButtonCount="10" ButtonType="Link" 
+                                            
+                                            NumericButtonCssClass="btn btn-info" />
+                                        <asp:NextPreviousPagerField
+                                            ButtonType="Button"
+                                            ShowFirstPageButton="false"
+                                            ShowPreviousPageButton="false"
+                                            ShowLastPageButton="true" ButtonCssClass="btn btn-info" />
+
                                     </Fields>
                                 </asp:DataPager>
                             </LayoutTemplate>
@@ -129,6 +142,9 @@
                                     </td>
                                     <td>
                                         <asp:Label runat="server" ID="lblValue" Visible="true" Text="<%#Item.Value%>"></asp:Label>
+                                    </td>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblUnit" Visible="true" Text="<%#Item.Indicator.Unit%>"></asp:Label>
                                     </td>
                                     <td>
                                         <asp:Label runat="server" ID="lblTime" Visible="true" Text="<%#Item.Time.GetDateTimeFormats('y')[0].ToString()%>"></asp:Label>
@@ -147,7 +163,10 @@
                                         <asp:Label runat="server" ID="lblName" Visible="true" Text="<%#Item.Indicator.Name %>"></asp:Label>
                                     </td>
                                     <td>
-                                        <asp:TextBox runat="server" ID="txtValue" Visible="true" ReadOnly="<%#Item.Indicator.IsAutoGetData ? true : false %>" CssClass="form-control" Text="<%#Item.Value%>"></asp:TextBox>
+                                        <asp:TextBox runat="server" ID="txtValue" Visible="true" CssClass="form-control" Text="<%#Item.Value%>"></asp:TextBox>
+                                    </td>
+                                    <td>
+                                        <asp:Label runat="server" ID="lblUnit" Visible="true" Text="<%#Item.Indicator.Unit%>"></asp:Label>
                                     </td>
                                     <td>
                                         <asp:Label runat="server" ID="lblTime" Visible="true" Text="<%#Item.Time.GetDateTimeFormats('y')[0].ToString()%>"></asp:Label>

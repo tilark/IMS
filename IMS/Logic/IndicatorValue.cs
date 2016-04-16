@@ -10,48 +10,86 @@ namespace IMS.Logic
 {
     public class IndicatorValue
     {
-        public decimal GetDepartmentIndicatorValueByCaculate(Guid departmentId, Guid indicatorId, DateTime time)
+        public Decimal GetDepartmentIndicatorValueByCalculate(Guid departmentId, Guid indicatorId, DateTime time)
         {
             decimal value = Decimal.Zero;
-            using ( ImsDbContext context = new ImsDbContext())
+            using (ImsDbContext context = new ImsDbContext())
             {
                 //根据inidicatorId从IndicatorAlgorithm中找到ResultOperation
-                var resultIndicator = context.IndicatorAlgorithms.Where(i => i.ResultOperationID == indicatorId).FirstOrDefault();
-                //如果不存在，返回Decimal.Zero
-
-                if (resultIndicator == null)
-                {
-                    return value;
-                }
-                //查找firstOperation，先从DepartmentIndicatorValue中查找，
-                var firstIndicator = GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time);
+                value = GetDepartmentIndicatorValue(context, departmentId, indicatorId, time);
             }
-            //如果找到，则有值，如果没有，再从IndicatorAlgorithm中找ResultOperation
-            //如果未找到，返回
-            //如果找到，得到计算值，递归
-            //查找SecondOperation,先从DepartmentIndicatorValue中查找
-            //如果找到，则有值，如果没有，再从IndicatorAlgorithm中找ResultOperation
-            //如果未找到，返回
-            //如果找到，得到计算值，递归
             return value;
         }
-        public DepartmentIndicatorValue GetDepartmentIndicatorValue( ImsDbContext context, Guid departmentId, Guid indicatorId, DateTime time)
+        private Decimal GetDepartmentIndicatorValue(ImsDbContext context, Guid departmentId, Guid indicatorId, DateTime time)
         {
-            //先从DepartmentIndicatorValues找项目
-            var item = context.DepartmentIndicatorValues.Where(i => i.IndicatorID == indicatorId && i.DepartmentID == departmentId 
-                    && i.Time.Year == time.Year && i.Time.Month == time.Month).FirstOrDefault();
-            if (item == null)
+            if (indicatorId == null)
             {
-                //未找到，从IndicatorAlgorithm中找到ResultOperation
-
-                var resultIndicator = context.IndicatorAlgorithms.Where(i => i.ResultOperationID == indicatorId).FirstOrDefault();
-                if (resultIndicator != null)
+                return Decimal.Zero; ;
+            }
+            //先从IndicatorAlgorithm找，看该ID是否为计算结果项，如果是，则继续查找，直到该indicatorId 为基础项
+            var resultIndicator = context.IndicatorAlgorithms.Where(i => i.ResultOperationID == indicatorId).FirstOrDefault();
+            if (resultIndicator != null)
+            {
+                //如果能够找到Result的Indicator，继续算值
+                //递归调用计算值，根据Operation计算
+                if (resultIndicator.Operation == null)
                 {
-                    //如果能够找到Result的Indicator，继续算值
-                    GetDepartmentIndicatorValue(context, departmentId, resultIndicator.ResultOperationID.Value, time);
+                    return Decimal.Zero;
+                }
+                else
+                {
+                    switch (resultIndicator.Operation)
+                    {
+                        case "addition":
+                            return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
+                                    + GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
+                        case "subtraction":
+                            return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
+                             - GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
+
+                        case "multiplication":
+                            return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
+                                    * GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
+
+                        case "division":
+                            var secondValue = GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
+                            if (secondValue != Decimal.Zero)
+                            {
+                                return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
+                                        / secondValue;
+                            }
+                            else
+                            {
+                                return Decimal.Zero;
+                            }
+                    }
                 }
             }
-            return item;
+            else
+            {
+                //为基础项，从DepartmentIndicatorValues中找值，如果值存在，返回Value，不存在，返回Zero
+                var item = context.DepartmentIndicatorValues.Where(i => i.IndicatorID == indicatorId && i.DepartmentID == departmentId
+        && i.Time.Year == time.Year && i.Time.Month == time.Month).FirstOrDefault();
+                if (item == null)
+                {
+                    //未找到，返回Zero
+                    return Decimal.Zero;
+
+                }
+                else
+                {
+                    Decimal parseValue;
+                    if (Decimal.TryParse(item.Value.ToString(), out parseValue))
+                    {
+                        return parseValue;
+                    }
+                    else
+                    {
+                        return Decimal.Zero;
+                    }
+                }
+            }
+            return Decimal.Zero;
         }
     }
 }

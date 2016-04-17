@@ -12,103 +12,91 @@ namespace IMS.Logic
     {
         public Decimal GetDepartmentIndicatorValueByCalculate(Guid departmentId, Guid indicatorId, DateTime time)
         {
-            GetDepartmentIndicatorValueValueByCalculate(departmentId, indicatorId, time, 1);
-
-            #region "原代码"
-
-            //decimal value = Decimal.Zero;
-            //using (ImsDbContext context = new ImsDbContext())
-            //{
-            //    //根据inidicatorId从IndicatorAlgorithm中找到ResultOperation
-            //    value = GetDepartmentIndicatorValue(context, departmentId, indicatorId, time);
-            //}
-            //return value;
-
-            #endregion
+            decimal value = Decimal.Zero;
+            using (ImsDbContext context = new ImsDbContext())
+            {
+                //根据inidicatorId从IndicatorAlgorithm中找到ResultOperation
+                value = GetDepartmentIndicatorValue(context, departmentId, indicatorId, time);
+            }
+            return value;
         }
         private Decimal GetDepartmentIndicatorValue(ImsDbContext context, Guid departmentId, Guid indicatorId, DateTime time)
         {
-            GetDepartmentIndicatorValueValue(context, departmentId, indicatorId, time, 1);
+            if (indicatorId == null)
+            {
+                return Decimal.Zero; ;
+            }
+            //先从IndicatorAlgorithm找，看该ID是否为计算结果项，如果是，则继续查找，直到该indicatorId 为基础项
+            var resultIndicator = context.IndicatorAlgorithms.Where(i => i.ResultOperationID == indicatorId).FirstOrDefault();
+            if (resultIndicator != null)
+            {
+                //如果能够找到Result的Indicator，继续算值
+                //递归调用计算值，根据Operation计算
+                if (resultIndicator.Operation == null)
+                {
+                    return Decimal.Zero;
+                }
+                else
+                {
+                    switch (resultIndicator.Operation)
+                    {
+                        case "addition":
+                            return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
+                                    + GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
+                        case "subtraction":
+                            return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
+                             - GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
 
-            #region "原代码"
+                        case "multiplication":
+                            return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
+                                    * GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
 
-            //    if (indicatorId == null)
-            //    {
-            //        return Decimal.Zero; ;
-            //    }
-            //    //先从IndicatorAlgorithm找，看该ID是否为计算结果项，如果是，则继续查找，直到该indicatorId 为基础项
-            //    var resultIndicator = context.IndicatorAlgorithms.Where(i => i.ResultOperationID == indicatorId).FirstOrDefault();
-            //    if (resultIndicator != null)
-            //    {
-            //        //如果能够找到Result的Indicator，继续算值
-            //        //递归调用计算值，根据Operation计算
-            //        if (resultIndicator.Operation == null)
-            //        {
-            //            return Decimal.Zero;
-            //        }
-            //        else
-            //        {
-            //            switch (resultIndicator.Operation)
-            //            {
-            //                case "addition":
-            //                    return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
-            //                            + GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
-            //                case "subtraction":
-            //                    return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
-            //                     - GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
+                        case "division":
+                            var secondValue = GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
+                            if (secondValue != Decimal.Zero)
+                            {
+                                return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
+                                        / secondValue;
+                            }
+                            else
+                            {
+                                return Decimal.Zero;
+                            }
+                    }
+                }
+            }
+            else
+            {
+                //为基础项，从DepartmentIndicatorValues中找值，如果值存在，返回Value，不存在，返回Zero
+                var item = context.DepartmentIndicatorValues.Where(i => i.IndicatorID == indicatorId && i.DepartmentID == departmentId
+        && i.Time.Year == time.Year && i.Time.Month == time.Month).FirstOrDefault();
+                if (item == null)
+                {
+                    //未找到，返回Zero
+                    return Decimal.Zero;
 
-            //                case "multiplication":
-            //                    return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
-            //                            * GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
-
-            //                case "division":
-            //                    var secondValue = GetDepartmentIndicatorValue(context, departmentId, resultIndicator.SecondOperationID.Value, time);
-            //                    if (secondValue != Decimal.Zero)
-            //                    {
-            //                        return GetDepartmentIndicatorValue(context, departmentId, resultIndicator.FirstOperationID.Value, time)
-            //                                / secondValue;
-            //                    }
-            //                    else
-            //                    {
-            //                        return Decimal.Zero;
-            //                    }
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //为基础项，从DepartmentIndicatorValues中找值，如果值存在，返回Value，不存在，返回Zero
-            //        var item = context.DepartmentIndicatorValues.Where(i => i.IndicatorID == indicatorId && i.DepartmentID == departmentId
-            //&& i.Time.Year == time.Year && i.Time.Month == time.Month).FirstOrDefault();
-            //        if (item == null)
-            //        {
-            //            //未找到，返回Zero
-            //            return Decimal.Zero;
-
-            //        }
-            //        else
-            //        {
-            //            Decimal parseValue;
-            //            if (Decimal.TryParse(item.Value.ToString(), out parseValue))
-            //            {
-            //                return parseValue;
-            //            }
-            //            else
-            //            {
-            //                return Decimal.Zero;
-            //            }
-            //        }
-            //    }
-            //    return Decimal.Zero;
-
-            #endregion
+                }
+                else
+                {
+                    Decimal parseValue;
+                    if (Decimal.TryParse(item.Value.ToString(), out parseValue))
+                    {
+                        return parseValue;
+                    }
+                    else
+                    {
+                        return Decimal.Zero;
+                    }
+                }
+            }
+            return Decimal.Zero;
         }
 
 
 
 
 
-        #region"更新的计算指标算法与获取结果"
+        #region"新增的计算指标算法与获取结果"
 
         /// <summary>
         /// 获取“计算指标”的值。（通过“时段的开始时间”和“时段的结束时间”）。
@@ -184,11 +172,11 @@ namespace IMS.Logic
                 //执行其所代表的计算过程。
 
                 //当算法操作符为空时，返回0。
-                if (IndicatorAlgorithm.Operation = null)
+                if (IndicatorAlgorithm.Operation == null)
                     return decimal.Zero;
 
-                decimal FirstOperand = GetDepartmentIndicatorValue(imsDbContext, departmentId, resultIndicator.FirstOperationID.Value, start, end);
-                decimal SecondOperand = GetDepartmentIndicatorValue(imsDbContext, departmentId, resultIndicator.SecondOperationID.Value, start, end);
+                decimal FirstOperand = GetDepartmentIndicatorValueValue(imsDbContext, departmentId, IndicatorAlgorithm.FirstOperationID.Value, start, end);
+                decimal SecondOperand = GetDepartmentIndicatorValueValue(imsDbContext, departmentId, IndicatorAlgorithm.SecondOperationID.Value, start, end);
 
                 switch (IndicatorAlgorithm.Operation)
                 {
@@ -200,6 +188,8 @@ namespace IMS.Logic
                         return FirstOperand * SecondOperand;
                     case ("division"):
                         return (SecondOperand == decimal.Zero) ? decimal.Zero : FirstOperand / SecondOperand;
+                    default:
+                        return decimal.Zero;
                 }
             }
             else

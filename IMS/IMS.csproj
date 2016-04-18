@@ -538,6 +538,7 @@
     <Compile Include="Logic\GetBaseData.cs" />
     <Compile Include="Logic\IndicatorValue.cs" />
     <Compile Include="Logic\InitialItemData.cs" />
+    <Compile Include="Logic\Reports.cs" />
     <Compile Include="Logic\RoleActions.cs" />
     <Compile Include="Logic\WriteBaseData.cs" />
     <Compile Include="Models\IndicatorMonitorModels.cs" />

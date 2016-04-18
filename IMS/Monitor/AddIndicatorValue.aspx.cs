@@ -15,6 +15,7 @@ namespace IMS.Monitor
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Message.Text = "Load！";
             if (!IsPostBack)
             {
                 dlDepatmentBind();
@@ -181,7 +182,7 @@ namespace IMS.Monitor
         //     int startRowIndex
         //     out int totalRowCount
         //     string sortByExpression
-        public IQueryable<IMS.Models.Indicator> lvIndicatorItem_GetData([Control] Guid? dlDepartment)
+        public IQueryable<IMS.Models.Indicator> lvIndicatorItem_GetData([Control] Guid? dlDepartment, [Control] DateTime? txtDate, [Control] string Message)
         {
             IQueryable<IMS.Models.Indicator> query = null;
 

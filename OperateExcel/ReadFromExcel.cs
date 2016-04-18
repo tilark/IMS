@@ -208,7 +208,7 @@ namespace OperateExcel
         }
 
         // Given a cell name, parses the specified cell to get the row index.
-        private uint GetRowIndex(string cellName)
+        public uint GetRowIndex(string cellName)
         {
             // Create a regular expression to match the row index portion the cell name.
             Regex regex = new Regex(@"\d+");
@@ -217,7 +217,7 @@ namespace OperateExcel
             return uint.Parse(match.Value);
         }
         // Given a cell name, parses the specified cell to get the column name.
-        private string GetColumnName(string cellName)
+        public string GetColumnName(string cellName)
         {
             // Create a regular expression to match the column name portion of the cell name.
             Regex regex = new Regex("[A-Za-z]+");
@@ -226,7 +226,7 @@ namespace OperateExcel
             return match.Value;
         }
         // Given two columns, compares the columns.
-        private int CompareColumn(string column1, string column2)
+        public int CompareColumn(string column1, string column2)
         {
             if (column1.Length > column2.Length)
             {

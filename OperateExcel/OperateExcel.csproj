@@ -54,6 +54,7 @@
     <Compile Include="ReadFromExcel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WriteToExcel.cs" />
+    <Compile Include="WriteToExcel2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Fakes Include="Fakes\DocumentFormat.OpenXml.fakes" />

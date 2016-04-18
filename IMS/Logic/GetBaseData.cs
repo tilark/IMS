@@ -63,5 +63,19 @@ namespace IMS.Logic
             return listData;
 
         }
+        public Dictionary<Guid, string> GetDepartmentCategoryDic()
+        {
+            Dictionary<Guid, string> listData = new Dictionary<Guid, string>();
+            using (ImsDbContext context = new ImsDbContext())
+            {
+                //listData.Add(" ", "-全选-");
+                foreach (var query in context.DepartmentCategories)
+                {
+                    listData.Add(query.DepartmentCategoryID, query.Name);
+                }
+            }
+            return listData;
+
+        }
     }
 }

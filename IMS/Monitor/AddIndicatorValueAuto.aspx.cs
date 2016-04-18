@@ -91,7 +91,13 @@ namespace IMS.Monitor
                                 //相当于一个Update
                                 IndicatorValue indicatorValue = new IndicatorValue();
                                 var valueReturned = indicatorValue.GetDepartmentIndicatorValueByCalculate(query.DepartmentID, query.IndicatorID, addTime);
+                                //根据项目值单位，如果是“百分比”，需乘以100
+                                if (query.Indicator.Unit == "百分比")
+                                {
+                                    valueReturned *= 100;
+                                }
                                 query.Value = valueReturned;
+                                
                                 #region Client win context.SaveChanges();
                                 bool saveFailed;
                                 do
@@ -124,6 +130,11 @@ namespace IMS.Monitor
                                 //从计算获取该值
                                 IndicatorValue indicatorValue = new IndicatorValue();
                                 var valueReturned = indicatorValue.GetDepartmentIndicatorValueByCalculate(item.DepartmentID, item.IndicatorID, addTime);
+                                //根据项目值单位，如果是“百分比”，需乘以100
+                                if (item.Indicator.Unit == "百分比")
+                                {
+                                    valueReturned *= 100;
+                                }
                                 item.Value = valueReturned;
                                 context.DepartmentIndicatorValues.Add(item);
                                 context.SaveChanges();

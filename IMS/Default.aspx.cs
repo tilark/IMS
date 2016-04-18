@@ -11,7 +11,13 @@ namespace IMS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                if (Context.User.IsInRole("Administrators"))
+                {
+                    AdminLink.Visible = true;
+                }
+            }
         }
     }
 }

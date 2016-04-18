@@ -2,39 +2,56 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <div class="jumbotron">
-        <h1>ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-        <p><a href="http://www.asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-    </div>
+    <style>
+        .ButtonFunction {
+            width: 120px;
+        }
+    </style>
 
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Getting started</h2>
+    <div id="MainControl">
+        <div class="row">
+            <div>
+                <h3></h3>
+            </div>
+        </div>
+        <div class="row">
+            <h3>你好，<a><%:Context.User.Identity.Name %></a></h3>
             <p>
-                ASP.NET Web Forms lets you build dynamic websites using a familiar drag-and-drop, event-driven model.
-            A design surface and hundreds of controls and components let you rapidly build sophisticated, powerful UI-driven sites with data access.
+                <br />
             </p>
             <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301948">Learn more &raquo;</a>
+                <br />
+            </p>
+            <p>
+                <br />
             </p>
         </div>
-        <div class="col-md-4">
-            <h2>Get more libraries</h2>
+        <div class="row">
+            <fieldset>
+                <legend>填写数据
+                </legend>
+                <a class="blockUI btn btn-primary btn-tile show-popover ButtonFunction" href="Monitor/AddIndicatorValue.aspx">添加数据</a>
+                <a class="blockUI btn btn-primary btn-tile show-popover ButtonFunction" href="Monitor/AddIndicatorValueAuto.aspx">获取系统数据</a>
+
+            </fieldset>
             <p>
-                NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.
+                <br />
             </p>
+            <fieldset>
+                <legend>查看报表
+                </legend>
+                <a class="blockUI btn btn-primary btn-tile show-popover ButtonFunction" href="Reporter/Reports.aspx">查看报表</a>
+            </fieldset>
             <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301949">Learn more &raquo;</a>
+                <br />
             </p>
-        </div>
-        <div class="col-md-4">
-            <h2>Web Hosting</h2>
+            <fieldset>
+                <legend>管理员界面
+                </legend>
+                <asp:HyperLink ID="AdminLink" Visible="false" NavigateUrl="~/Admin/ListUsers.aspx" CssClass="blockUI btn btn-primary btn-tile show-popover ButtonFunction" runat="server">管理员界面</asp:HyperLink>
+            </fieldset>
             <p>
-                You can easily find a web hosting company that offers the right mix of features and price for your applications.
-            </p>
-            <p>
-                <a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301950">Learn more &raquo;</a>
+                <br />
             </p>
         </div>
     </div>

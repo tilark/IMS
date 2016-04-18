@@ -217,8 +217,8 @@
     <Content Include="Monitor\Web.config" />
     <Content Include="Reporter\Reports.aspx" />
     <Content Include="Reporter\Web.config" />
+    <Content Include="ReportFileTemp\Web.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Reporter\ReportTest1.aspx" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -458,6 +458,10 @@
     <Compile Include="ApplicationDbContextMigrations\201604160420569_CreateUserDatabase1.Designer.cs">
       <DependentUpon>201604160420569_CreateUserDatabase1.cs</DependentUpon>
     </Compile>
+    <Compile Include="ApplicationDbContextMigrations\201604181233299_AddNameInUser.cs" />
+    <Compile Include="ApplicationDbContextMigrations\201604181233299_AddNameInUser.Designer.cs">
+      <DependentUpon>201604181233299_AddNameInUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="ApplicationDbContextMigrations\Configuration.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="About.aspx.cs">
@@ -580,13 +584,6 @@
     <Compile Include="Reporter\Reports.aspx.designer.cs">
       <DependentUpon>Reports.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Reporter\ReportTest1.aspx.cs">
-      <DependentUpon>ReportTest1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Reporter\ReportTest1.aspx.designer.cs">
-      <DependentUpon>ReportTest1.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -612,7 +609,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ReportFileTemp\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ApplicationDbContextMigrations\201604111211096_CreateUserDatabase.resx">
@@ -620,6 +616,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ApplicationDbContextMigrations\201604160420569_CreateUserDatabase1.resx">
       <DependentUpon>201604160420569_CreateUserDatabase1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ApplicationDbContextMigrations\201604181233299_AddNameInUser.resx">
+      <DependentUpon>201604181233299_AddNameInUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImsDbContextMigrations\201604110220498_InitialDataBase.resx">
       <DependentUpon>201604110220498_InitialDataBase.cs</DependentUpon>

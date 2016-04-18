@@ -18,6 +18,7 @@ namespace IMS.Models
         //添加科室列表
         public string Department {get; set; }
         public string EmployeeNo { get; set; }
+        public string Name { get; set; }
         public ClaimsIdentity GenerateUserIdentity(ApplicationUserManager manager)
         {
             // 请注意，authenticationType 必须与 CookieAuthenticationOptions.AuthenticationType 中定义的相应项匹配

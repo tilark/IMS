@@ -35,7 +35,7 @@ namespace IMS.Admin
         }
 
         // id 参数名应该与控件上设置的 DataKeyNames 值匹配
-        public void lvUser_UpdateItem(int id)
+        public void lvUser_UpdateItem(string id)
         {
             IMS.Models.ApplicationUser item = null;
             // 在此加载该项，例如 item = MyDataLayer.Find(id);

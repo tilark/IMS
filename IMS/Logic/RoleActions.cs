@@ -78,6 +78,7 @@ namespace IMS.Logic
                         var user = new ApplicationUser();
                         user.UserName = adminName;
                         user.Email = "Administrator@qq.com";
+                        user.Name = "管理员";
                         var adminResult = userManager.Create(user, password);
                         //Add User Admin to Role Administrator
                         if (adminResult.Succeeded)

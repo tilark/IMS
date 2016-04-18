@@ -41,11 +41,6 @@ namespace IMS.Reporter
             {
                 Message.Text = "截止时间不能小于开始时间！";
             }
-            //if(ddlDepartmentCategory == null || Guid.TryParse(ddlDepartmentCategory.SelectedValue, out departmentCategoryID)
-            //    || !DateTime.TryParse(txtTimeFrom.Text, out startTime) || !DateTime.TryParse(txtTimeTo.Text, out endTime))
-            //{
-            //    return;
-            //}
             using (ImsDbContext context = new ImsDbContext())
             {
                 var dt = Logic.Reports.GetGenericReport(context, departmentCategoryID, startTime, endTime);

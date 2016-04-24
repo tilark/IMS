@@ -218,6 +218,7 @@
     <Content Include="Reporter\Reports.aspx" />
     <Content Include="Reporter\Web.config" />
     <Content Include="ReportFileTemp\Web.config" />
+    <None Include="Properties\PublishProfiles\IMSV1.0.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />

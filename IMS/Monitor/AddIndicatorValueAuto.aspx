@@ -4,8 +4,13 @@
     <link rel="stylesheet" href="../Content/bootstrap-datetimepicker.min.css" />
 
     <h3>添加数据</h3>
-    <asp:ValidationSummary ID="ValidationSummary1" ShowModelStateErrors="true" runat="server" />
-    <asp:Label ID="Message" runat="server" Visible="false" Text="fresh"></asp:Label>
+    <asp:UpdatePanel ID="UpdatePanel3" runat="server" UpdateMode="Always">
+        <ContentTemplate>
+            <asp:ValidationSummary ID="ValidationSummary1" ShowModelStateErrors="true" runat="server" />
+            <asp:Label ID="Message" runat="server" Visible="false" Text="fresh"></asp:Label>
+
+        </ContentTemplate>
+    </asp:UpdatePanel>
     <div class="form-horizontal">
         <div class="form-group">
             <asp:Label runat="server" AssociatedControlID="txtDate" CssClass="col-md-2 control-label">时间</asp:Label>
@@ -119,9 +124,8 @@
                                             ShowFirstPageButton="True"
                                             ShowNextPageButton="false"
                                             ShowLastPageButton="false" ButtonCssClass="btn btn-info" />
-                                        <asp:NumericPagerField 
-                                            ButtonCount="10" ButtonType="Link" 
-                                            
+                                        <asp:NumericPagerField
+                                            ButtonCount="10" ButtonType="Link"
                                             NumericButtonCssClass="btn btn-info" />
                                         <asp:NextPreviousPagerField
                                             ButtonType="Button"

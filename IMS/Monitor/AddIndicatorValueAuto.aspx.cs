@@ -76,10 +76,10 @@ namespace IMS.Monitor
                         {
                             continue;
                         }
-                        var departments = departmentCategory.Departments;
+                        //var departments = departmentCategory.Departments;
                         //列出该科室负责的填报项目，再逐步添加到值表中。
 
-                        foreach (var department in departments)
+                        foreach (var department in departmentCategory.Departments)
                         {
                             //需先查重，如果已经该项目已存在于数据库，不添加
                             //检查下一项
@@ -92,7 +92,7 @@ namespace IMS.Monitor
                                 IndicatorValue indicatorValue = new IndicatorValue();
                                 var valueReturned = indicatorValue.GetDepartmentIndicatorValueByCalculate(query.DepartmentID, query.IndicatorID, addTime);
                                 //根据项目值单位，如果是“百分比”，需乘以100
-                                if (query.Indicator.Unit == "百分比")
+                                if (indicator.Unit == "百分比")
                                 {
                                     valueReturned *= 100;
                                 }
@@ -131,7 +131,7 @@ namespace IMS.Monitor
                                 IndicatorValue indicatorValue = new IndicatorValue();
                                 var valueReturned = indicatorValue.GetDepartmentIndicatorValueByCalculate(item.DepartmentID, item.IndicatorID, addTime);
                                 //根据项目值单位，如果是“百分比”，需乘以100
-                                if (item.Indicator.Unit == "百分比")
+                                if (indicator.Unit == "百分比")
                                 {
                                     valueReturned *= 100;
                                 }
@@ -165,11 +165,23 @@ namespace IMS.Monitor
                         {
                             continue;
                         }
-                        var departments = departmentCategory.Departments;
+                        //var departments = departmentCategory.Departments;
                         //列出该科室负责的填报项目，再逐步添加到值表中。
 
-                        foreach (var department in departments)
+                        foreach (var department in departmentCategory.Departments)
                         {
+                            //从病案管理系统中获取项目值
+                            decimal valueReturned = Decimal.Zero;
+                            try
+                            {
+                                var bagl = new ImsAutoLib.Bagl.Bagl("BaglConnection");
+                                valueReturned = bagl.GetIndicatorValue(department.DepartmentID, indicator.IndicatorID, addTime);
+                            }
+                            catch (Exception ex)
+                            {
+                                ModelState.AddModelError("", String.Format("无法连接病案室管理系统。<br/>详情：{0}", ex.Message));
+                                valueReturned = Decimal.Zero;
+                            }
                             //需先查重，如果已经该项目已存在于数据库，不添加
                             //检查下一项
                             var query = context.DepartmentIndicatorValues.Where(d => d.DepartmentID == department.DepartmentID && d.IndicatorID == indicator.IndicatorID
@@ -178,9 +190,8 @@ namespace IMS.Monitor
                             {
                                 //更改项目的计算值。
                                 //从病案管理系统中获取值
-                                //var bagl = new ImsAutoLib.Bagl.Bagl();
-                                //var valueReturned = bagl.GetIndicatorValue(item.DepartmentID.Value, item.IndicatorID.Value, item.Time);
-                                //item.Value = valueReturned;
+                                
+                                query.Value = valueReturned;
                                 #region  Client win context.SaveChanges();
                                 bool saveFailed;
                                 do
@@ -210,10 +221,7 @@ namespace IMS.Monitor
                                 item.IndicatorID = indicator.IndicatorID;
                                 item.Time = addTime;
                                 item.ID = System.Guid.NewGuid();
-                                //从病案管理系统中获取值
-                                //var bagl = new ImsAutoLib.Bagl.Bagl();
-                                //var valueReturned = bagl.GetIndicatorValue(item.DepartmentID.Value, item.IndicatorID.Value, item.Time);
-                                //item.Value = valueReturned;
+                                item.Value = valueReturned;
                                 context.DepartmentIndicatorValues.Add(item);
                                 context.SaveChanges();
                             }
